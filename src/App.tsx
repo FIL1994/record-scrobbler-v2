@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Music, Search } from 'lucide-react';
-import { getCollection } from './services/discogs';
-import { scrobbleTrack } from './services/lastfm';
-import { AlbumCard } from './components/AlbumCard';
-import type { Album, DiscogsRelease } from './types';
+import { useState } from "react";
+import { Music, Search } from "lucide-react";
+import { getCollection } from "./services/discogs";
+import { scrobbleTrack } from "./services/lastfm";
+import { AlbumCard } from "./components/AlbumCard";
+import type { Album, DiscogsRelease } from "./types";
 
 function App() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   const [collection, setCollection] = useState<Album[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchCollection = async (username: string) => {
     try {
@@ -25,7 +25,9 @@ function App() {
       }));
       setCollection(albums);
     } catch (err) {
-      setError('Failed to fetch collection. Please check your username and try again.');
+      setError(
+        "Failed to fetch collection. Please check your username and try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -34,13 +36,13 @@ function App() {
   const handleScrobble = async (album: Album) => {
     try {
       await scrobbleTrack(album.artist, album.title, album.title);
-      alert('Successfully scrobbled to Last.fm!');
+      alert("Successfully scrobbled to Last.fm!");
     } catch (err) {
-      alert('Failed to scrobble track. Please try again.');
+      alert("Failed to scrobble track. Please try again.");
     }
   };
 
-  const filteredCollection = collection.filter(album => {
+  const filteredCollection = collection.filter((album) => {
     const query = searchQuery.toLowerCase();
     return (
       album.title.toLowerCase().includes(query) ||
@@ -55,7 +57,9 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
             <Music className="text-red-600" size={24} />
-            <h1 className="text-xl font-bold text-gray-900">Vinyl Collection Manager</h1>
+            <h1 className="text-xl font-bold text-gray-900">
+              Vinyl Collection Manager
+            </h1>
           </div>
         </div>
       </header>
@@ -71,15 +75,16 @@ function App() {
               className="flex-1 max-w-xs px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             />
             <button
+              type="button"
               onClick={() => fetchCollection(username)}
               disabled={loading || !username}
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Loading...' : 'Fetch Collection'}
+              {loading ? "Loading..." : "Fetch Collection"}
             </button>
           </div>
           {error && <p className="mt-2 text-red-600">{error}</p>}
-          
+
           {collection.length > 0 && (
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
