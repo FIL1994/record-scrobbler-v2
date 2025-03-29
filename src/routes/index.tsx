@@ -35,12 +35,13 @@ function Home() {
   }, []);
 
   const {
-    data: collection,
+    data: collection = [],
     isLoading: loading,
     error,
   } = useQuery(discogsCollectionOptions(savedUsername));
 
   console.log("collectionData", {
+    savedUsername,
     collection,
     error,
   });

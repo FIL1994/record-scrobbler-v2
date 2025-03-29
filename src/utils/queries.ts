@@ -6,12 +6,12 @@ import { getToken } from "./getToken";
 
 const queryKeyStore = createQueryKeyStore({
   discogs: {
-    collection: (username: string) => ["discogs", username],
-    tracklist: (releaseId: number) => ["discogs", releaseId, "tracklist"],
+    collection: (username: string) => [username],
+    tracklist: (releaseId: number) => [releaseId, "tracklist"],
   },
   lastfm: {
-    session: (token: string) => ["lastfm", token],
-    userInfo: (sessionToken: string) => ["lastfm", sessionToken, "user-info"],
+    session: (token: string) => [token],
+    userInfo: (sessionToken: string) => [sessionToken, "user-info"],
   },
 });
 
@@ -24,13 +24,14 @@ export const discogsCollectionOptions = (username: string) => {
     enabled: Boolean(username),
     select: (data) =>
       data.map((release) => ({
+        id: release.id,
         title: release.basic_information.title,
         artist: release.basic_information.artists[0].name,
         year: release.basic_information.year,
         coverImage: release.basic_information.cover_image,
       })),
     retry: false,
-    initialData: [],
+    placeholderData: [],
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
