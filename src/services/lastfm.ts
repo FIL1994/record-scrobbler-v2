@@ -18,6 +18,7 @@ export async function scrobbleTrack({
   album?: string;
   cbUrl?: string;
 }) {
+  // UNIX timestamp. Seconds since epoch. Must be in UTC time zone
   const timestamp = Math.floor(Date.now() / 1000);
 
   const params = new URLSearchParams({
@@ -28,6 +29,7 @@ export async function scrobbleTrack({
     api_key: API_KEY,
     format: "json",
     token: sessionToken,
+    sk: sessionToken,
   });
 
   if (album) {
@@ -37,6 +39,15 @@ export async function scrobbleTrack({
   if (cbUrl) {
     params.set("cb", cbUrl);
   }
+
+  const { signature } = await fetch(`/api/sign`, {
+    method: "POST",
+    body: JSON.stringify(Object.fromEntries(params.entries())),
+  }).then((res) => res.json());
+
+  console.log("signature", signature);
+
+  params.set("api_sig", signature);
 
   const response = await fetch(`${LASTFM_API}?${params}`, {
     method: "POST",
