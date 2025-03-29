@@ -1,4 +1,3 @@
-// app/routes/__root.tsx
 import type { ReactNode } from "react";
 import {
   Outlet,
@@ -21,12 +20,15 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       ...seo({
-        title: "TanStack Start Starter",
+        title: "Record Scrobbler V2",
         description:
-          "TanStack Start is a type-safe, client-first, full-stack React framework. ",
+          "Record Scrobbler V2 is a web application that allows you to scrobble your vinyl collection to Last.fm.",
       }),
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.png" },
+    ],
   }),
   component: RootComponent,
 });

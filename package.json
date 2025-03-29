@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "start": "vinxi start",
+    "fmt": "bunx prettier --write ."
   },
   "dependencies": {
     "@tanstack/react-router": "^1.114.29",
