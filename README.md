@@ -1,5 +1,7 @@
 # record-scrobbler-v2
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/db880898-6a4b-4769-a68d-1062535597c7/deploy-status)](https://app.netlify.com/sites/record-scrobbler/deploys)
+
 A web app to scrobble your Discogs collection to Last.fm.
 
 ## Setup
