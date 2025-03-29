@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Music, Search } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
 import { scrobbleTrack } from "~/services/lastfm";
 import { Album } from "~/types";
@@ -19,6 +19,10 @@ export const Route = createFileRoute("/")({
     token: "string?",
   }),
 });
+
+enum FormNames {
+  Username = "discogs-username",
+}
 
 function Home() {
   const { username } = Route.useSearch({});
@@ -97,11 +101,11 @@ function Home() {
             className="flex gap-4"
             onSubmit={(e) => {
               e.preventDefault();
-              setSavedUsername(e.currentTarget.username.value);
+              setSavedUsername(e.currentTarget[FormNames.Username].value);
               navigate({
                 replace: true,
                 search: {
-                  username: e.currentTarget.username.value,
+                  username: e.currentTarget[FormNames.Username].value,
                   token: getToken(),
                 },
               });
@@ -109,8 +113,8 @@ function Home() {
           >
             <input
               type="text"
-              name="username"
-              autoComplete="discogs-username"
+              name={FormNames.Username}
+              autoComplete="on"
               defaultValue={savedUsername}
               placeholder="Enter your Discogs username"
               className="flex-1 max-w-xs px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
