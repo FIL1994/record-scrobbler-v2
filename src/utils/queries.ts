@@ -31,6 +31,10 @@ export const discogsCollectionOptions = (username: string) => {
       })),
     retry: false,
     initialData: [],
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
   });
 };
 
@@ -41,6 +45,10 @@ export const discogsTracklistOptions = (releaseId: number) => {
     queryKey: key,
     queryFn: () => getTracklist(releaseId),
     retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
   });
 };
 
