@@ -21,3 +21,25 @@ export interface Album {
 export interface DiscogsMasterRelease {
   year: number;
 }
+
+export interface DiscogsTrack {
+  position: string;
+  type_: string;
+  title: string;
+  duration: string;
+  artists?: Array<{
+    name: string;
+    id: number;
+  }>;
+}
+
+export interface DiscogsReleaseResponse {
+  id: number;
+  title: string;
+  artists: Array<{
+    name: string;
+    id: number;
+  }>;
+  tracklist: DiscogsTrack[];
+  year: number;
+}
