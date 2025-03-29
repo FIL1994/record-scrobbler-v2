@@ -6,14 +6,15 @@ import { type } from "arktype";
 const API_SECRET = import.meta.env.VITE_LASTFM_SECRET;
 
 const paramsType = type({
-  token: "string > 0",
+  ["token?"]: "string > 0",
   api_key: "string == 32",
   method: "string > 0",
-  format: "'json'",
+  format: "never?",
+  ["sk?"]: "string > 0",
   // only for scrobble params
-  artist: "string > 0",
-  track: "string > 0",
-  timestamp: "string > 0",
+  ["artist?"]: "string > 0",
+  ["track?"]: "string > 0",
+  ["timestamp?"]: "string > 0",
   ["album?"]: "string > 0",
 });
 
@@ -31,8 +32,8 @@ export const APIRoute = createAPIFileRoute("/api/sign")({
 
     if (params instanceof type.errors) {
       return json(
-        { error: params.summary || "Invalid parameters" },
-        { status: 400 },
+        { error: `Invalid parameters: ${params.summary}` },
+        { status: 400 }, // BadRequest
       );
     }
 

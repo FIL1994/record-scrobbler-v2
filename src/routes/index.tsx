@@ -1,17 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Music, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
 import { scrobbleTrack } from "~/services/lastfm";
 import { Album } from "~/types";
 import { discogsQueryOptions } from "~/utils/queries";
 import { type } from "arktype";
+import { getToken } from "~/utils/getToken";
+
+// const lastFMUrl = `http://www.last.fm/api/auth/?api_key=${import.meta.env.VITE_LASTFM_API_KEY}`;
+const lastFMUrl = `http://www.last.fm/api/auth/?api_key=${import.meta.env.VITE_LASTFM_API_KEY}&cb=${window.location.origin}/auth/lastfm/callback`;
 
 export const Route = createFileRoute("/")({
   component: Home,
   validateSearch: type({
     username: "string?",
+    token: "string?",
   }),
 });
 
@@ -20,6 +25,10 @@ function Home() {
   const navigate = Route.useNavigate();
   const [savedUsername, setSavedUsername] = useState(username || "");
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    getToken();
+  }, []);
 
   const {
     data: collection,
@@ -33,12 +42,17 @@ function Home() {
   });
 
   const handleScrobble = async (album: Album) => {
+    const lastfmToken = getToken();
+    if (!lastfmToken) {
+      throw new Error("No Last.fm token found");
+    }
+
     try {
       await scrobbleTrack({
         artist: album.artist,
         track: album.title,
         album: album.title,
-        sessionToken: "", // TODO - get session token
+        token: lastfmToken,
       });
       console.log("Successfully scrobbled to Last.fm!");
     } catch (err) {
@@ -59,11 +73,20 @@ function Home() {
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2">
-            <Music className="text-red-600" size={24} />
-            <h1 className="text-xl font-bold text-gray-900">
-              Vinyl Collection Manager
-            </h1>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Music className="text-red-600" size={24} />
+              <h1 className="text-xl font-bold text-gray-900">
+                Vinyl Collection Manager
+              </h1>
+            </div>
+            <a
+              href={lastFMUrl}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center gap-2"
+            >
+              <Music size={16} />
+              Sign in with Last.fm
+            </a>
           </div>
         </div>
       </header>
@@ -79,6 +102,7 @@ function Home() {
                 replace: true,
                 search: {
                   username: e.currentTarget.username.value,
+                  token: getToken(),
                 },
               });
             }}
@@ -86,6 +110,7 @@ function Home() {
             <input
               type="text"
               name="username"
+              autoComplete="discogs-username"
               defaultValue={savedUsername}
               placeholder="Enter your Discogs username"
               className="flex-1 max-w-xs px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"

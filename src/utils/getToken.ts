@@ -1,0 +1,21 @@
+const LASTFM_TOKEN_KEY = "lastfm_session_token";
+
+/**
+ * Get the Last.fm session token from URL or localStorage
+ */
+export function getToken() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlToken = urlParams.get("token");
+
+  if (urlToken) {
+    localStorage.setItem(LASTFM_TOKEN_KEY, urlToken);
+    return urlToken;
+  }
+
+  const storedToken = localStorage.getItem(LASTFM_TOKEN_KEY);
+  if (storedToken) {
+    return storedToken;
+  }
+
+  return undefined;
+}
