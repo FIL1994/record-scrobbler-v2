@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
 import { scrobbleTrack } from "~/services/lastfm";
 import { Album } from "~/types";
-import { discogsQueryOptions } from "~/utils/queries";
+import { discogsCollectionOptions } from "~/utils/queries";
 import { type } from "arktype";
 import { getToken } from "~/utils/getToken";
 
@@ -38,7 +38,7 @@ function Home() {
     data: collection,
     isLoading: loading,
     error,
-  } = useQuery(discogsQueryOptions(savedUsername));
+  } = useQuery(discogsCollectionOptions(savedUsername));
 
   console.log("collectionData", {
     collection,
