@@ -2,6 +2,7 @@ import { DiscogsRelease } from "~/types";
 
 const DISCOGS_API = "https://api.discogs.com";
 
+// oxlint-disable-next-line no-unused-vars
 async function getMasterReleaseYear(masterId: number): Promise<number> {
   const token = import.meta.env.VITE_DISCOGS_TOKEN;
 
@@ -48,7 +49,7 @@ export async function getCollection(username: string) {
               year: release.basic_information.year,
             },
           };
-        } catch (error) {
+        } catch {
           // Fallback to release year if master fetch fails
           return release;
         }

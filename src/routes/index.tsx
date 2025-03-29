@@ -54,9 +54,9 @@ function Home() {
   const handleScrobble = async (album: Album) => {
     try {
       await scrobbleTrack(album.artist, album.title, album.title);
-      alert("Successfully scrobbled to Last.fm!");
+      console.log("Successfully scrobbled to Last.fm!");
     } catch (err) {
-      alert("Failed to scrobble track. Please try again.");
+      console.error("Failed to scrobble track. Please try again.", err);
     }
   };
 
