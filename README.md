@@ -15,3 +15,13 @@ cp .env.example .env
 ```bash
 bun run dev
 ```
+
+## Callback URLs
+
+### Discogs
+
+`http://localhost:3000/auth/discogs/callback`
+
+### Last.fm
+
+`http://localhost:3000/auth/lastfm/callback`
