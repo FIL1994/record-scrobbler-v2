@@ -19,7 +19,7 @@ async function getMasterReleaseYear(masterId: number): Promise<number> {
 }
 
 export async function getCollection(username: string) {
-  const token = import.meta.env.VITE_DISCOGS_TOKEN;
+  const token = import.meta.env.VITE_DISCOGS_TOKEN || "";
 
   const response = await fetch(
     `${DISCOGS_API}/users/${username}/collection/folders/0/releases?token=${token}`,
