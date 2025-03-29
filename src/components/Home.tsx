@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Music, Search } from "lucide-react";
-import { getCollection } from "./services/discogs";
-import { scrobbleTrack } from "./services/lastfm";
-import { AlbumCard } from "./components/AlbumCard";
-import type { Album, DiscogsRelease } from "./types";
+import { getCollection } from "~/services/discogs";
+import { scrobbleTrack } from "~/services/lastfm";
+import type { Album, DiscogsRelease } from "~/types";
+import { AlbumCard } from "./AlbumCard";
 
-function App() {
+export function Home() {
   const [username, setUsername] = useState("");
   const [collection, setCollection] = useState<Album[]>([]);
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ function App() {
       setCollection(albums);
     } catch (err) {
       setError(
-        "Failed to fetch collection. Please check your username and try again."
+        "Failed to fetch collection. Please check your username and try again.",
       );
     } finally {
       setLoading(false);
@@ -126,5 +126,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

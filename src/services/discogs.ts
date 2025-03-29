@@ -4,7 +4,7 @@ async function getMasterReleaseYear(masterId: number): Promise<number> {
   const token = import.meta.env.VITE_DISCOGS_TOKEN;
 
   const response = await fetch(
-    `${DISCOGS_API}/masters/${masterId}?token=${token}`
+    `${DISCOGS_API}/masters/${masterId}?token=${token}`,
   );
 
   if (!response.ok) {
@@ -19,7 +19,7 @@ export async function getCollection(username: string) {
   const token = import.meta.env.VITE_DISCOGS_TOKEN;
 
   const response = await fetch(
-    `${DISCOGS_API}/users/${username}/collection/folders/0/releases?token=${token}`
+    `${DISCOGS_API}/users/${username}/collection/folders/0/releases?token=${token}`,
   );
 
   if (!response.ok) {
@@ -34,7 +34,7 @@ export async function getCollection(username: string) {
       if (release.basic_information.master_id) {
         try {
           const masterYear = await getMasterReleaseYear(
-            release.basic_information.master_id
+            release.basic_information.master_id,
           );
           return {
             ...release,
@@ -49,7 +49,7 @@ export async function getCollection(username: string) {
         }
       }
       return release;
-    })
+    }),
   );
 
   return releases;

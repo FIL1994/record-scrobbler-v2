@@ -4,7 +4,7 @@ const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
 export async function scrobbleTrack(
   artist: string,
   track: string,
-  album: string
+  album: string,
 ) {
   const timestamp = Math.floor(Date.now() / 1000);
 
