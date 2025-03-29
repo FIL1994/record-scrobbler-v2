@@ -1,5 +1,12 @@
 {
-  "ignorePatterns": ["public", "build", "routeTree.gen.ts"],
+  "ignorePatterns": [
+    "public",
+    "build",
+    "routeTree.gen.ts",
+    ".output",
+    ".vinxi",
+    "dist"
+  ],
   "plugins": ["react", "unicorn", "typescript", "oxc", "jsx-a11y"],
   "rules": {
     "no-alert": "error", // Emit an error message when a call to `alert()` is found
