@@ -12,12 +12,26 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as AuthLastfmCallbackImport } from './routes/auth.lastfm.callback'
+import { Route as AuthDiscogsCallbackImport } from './routes/auth.discogs.callback'
 
 // Create/Update Routes
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthLastfmCallbackRoute = AuthLastfmCallbackImport.update({
+  id: '/auth/lastfm/callback',
+  path: '/auth/lastfm/callback',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthDiscogsCallbackRoute = AuthDiscogsCallbackImport.update({
+  id: '/auth/discogs/callback',
+  path: '/auth/discogs/callback',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -32,6 +46,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/auth/discogs/callback': {
+      id: '/auth/discogs/callback'
+      path: '/auth/discogs/callback'
+      fullPath: '/auth/discogs/callback'
+      preLoaderRoute: typeof AuthDiscogsCallbackImport
+      parentRoute: typeof rootRoute
+    }
+    '/auth/lastfm/callback': {
+      id: '/auth/lastfm/callback'
+      path: '/auth/lastfm/callback'
+      fullPath: '/auth/lastfm/callback'
+      preLoaderRoute: typeof AuthLastfmCallbackImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +67,42 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
+  '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
+  '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
+  '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/auth/discogs/callback' | '/auth/lastfm/callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/auth/discogs/callback' | '/auth/lastfm/callback'
+  id: '__root__' | '/' | '/auth/discogs/callback' | '/auth/lastfm/callback'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthDiscogsCallbackRoute: typeof AuthDiscogsCallbackRoute
+  AuthLastfmCallbackRoute: typeof AuthLastfmCallbackRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthDiscogsCallbackRoute: AuthDiscogsCallbackRoute,
+  AuthLastfmCallbackRoute: AuthLastfmCallbackRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +115,19 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/auth/discogs/callback",
+        "/auth/lastfm/callback"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/auth/discogs/callback": {
+      "filePath": "auth.discogs.callback.tsx"
+    },
+    "/auth/lastfm/callback": {
+      "filePath": "auth.lastfm.callback.tsx"
     }
   }
 }
