@@ -31,29 +31,15 @@ function Home() {
     collection,
     error,
   });
-  //   try {
-  //     setLoading(true);
-  //     setError(null);
-  //     const releases = await getCollection(username);
-  //     const albums: Album[] = releases.map((release: DiscogsRelease) => ({
-  //       title: release.basic_information.title,
-  //       artist: release.basic_information.artists[0].name,
-  //       year: release.basic_information.year,
-  //       coverImage: release.basic_information.cover_image,
-  //     }));
-  //     setCollection(albums);
-  //   } catch (err) {
-  //     setError(
-  //       "Failed to fetch collection. Please check your username and try again."
-  //     );
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleScrobble = async (album: Album) => {
     try {
-      await scrobbleTrack(album.artist, album.title, album.title);
+      await scrobbleTrack({
+        artist: album.artist,
+        track: album.title,
+        album: album.title,
+        sessionToken: "", // TODO - get session token
+      });
       console.log("Successfully scrobbled to Last.fm!");
     } catch (err) {
       console.error("Failed to scrobble track. Please try again.", err);
