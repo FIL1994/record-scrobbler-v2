@@ -1,15 +1,22 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getCollection } from "~/services/discogs";
+import { getCollection, getTracklist } from "~/services/discogs";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
+import { getUserInfo } from "~/services/lastfm";
+import { getToken } from "./getToken";
 
 const queryKeyStore = createQueryKeyStore({
   discogs: {
-    username: (username: string) => ["discogs", username],
+    collection: (username: string) => ["discogs", username],
+    tracklist: (releaseId: number) => ["discogs", releaseId, "tracklist"],
+  },
+  lastfm: {
+    session: (token: string) => ["lastfm", token],
+    userInfo: (sessionToken: string) => ["lastfm", sessionToken, "user-info"],
   },
 });
 
-export const discogsQueryOptions = (username: string) => {
-  const key = queryKeyStore.discogs.username(username).queryKey;
+export const discogsCollectionOptions = (username: string) => {
+  const key = queryKeyStore.discogs.collection(username).queryKey;
 
   return queryOptions({
     queryKey: key,
@@ -24,5 +31,37 @@ export const discogsQueryOptions = (username: string) => {
       })),
     retry: false,
     initialData: [],
+  });
+};
+
+export const discogsTracklistOptions = (releaseId: number) => {
+  const key = queryKeyStore.discogs.tracklist(releaseId).queryKey;
+
+  return queryOptions({
+    queryKey: key,
+    queryFn: () => getTracklist(releaseId),
+    retry: false,
+  });
+};
+
+export const lastfmSessionOptions = () => {
+  const token = getToken();
+  const key = queryKeyStore.lastfm.session(token!).queryKey;
+
+  return queryOptions({
+    queryKey: key,
+    queryFn: () => getUserInfo(token!),
+    retry: false,
+    enabled: Boolean(token),
+  });
+};
+
+export const lastfmUserInfoOptions = (sessionToken: string) => {
+  const key = queryKeyStore.lastfm.session(sessionToken).queryKey;
+
+  return queryOptions({
+    queryKey: key,
+    queryFn: () => getUserInfo(sessionToken),
+    retry: false,
   });
 };

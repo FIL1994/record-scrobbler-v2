@@ -94,3 +94,29 @@ export async function scrobbleTrack({
 
   return response.json();
 }
+
+/**
+ * Get information about a Last.fm user
+ * @see https://www.last.fm/api/show/user.getInfo
+ */
+export async function getUserInfo(token: string) {
+  const params = new URLSearchParams({
+    method: "user.getInfo",
+    api_key: API_KEY,
+    sk: token,
+  });
+
+  const signature = await getSignature(params);
+  params.set("api_sig", signature);
+  params.set("format", "json");
+
+  const response = await fetch(`${LASTFM_API}?${params}`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to get user info");
+  }
+
+  return response.json();
+}

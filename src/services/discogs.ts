@@ -1,4 +1,4 @@
-import { DiscogsRelease } from "~/types";
+import type { DiscogsRelease, DiscogsReleaseResponse } from "~/types";
 
 const DISCOGS_API = "https://api.discogs.com";
 
@@ -59,4 +59,28 @@ export async function getCollection(username: string) {
   );
 
   return releases;
+}
+
+/**
+ * Get the tracklist for a release
+ * @see https://www.discogs.com/developers#page:database,header:database-release
+ */
+export async function getTracklist(releaseId: number) {
+  const token = import.meta.env.VITE_DISCOGS_TOKEN || "";
+
+  const response = await fetch(
+    `${DISCOGS_API}/releases/${releaseId}?token=${token}`,
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch release tracklist");
+  }
+
+  const data = (await response.json()) as DiscogsReleaseResponse;
+  return data.tracklist.map((track) => ({
+    title: track.title,
+    duration: track.duration,
+    position: track.position,
+    artist: track.artists?.[0]?.name || data.artists[0].name,
+  }));
 }
