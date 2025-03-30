@@ -43,17 +43,6 @@ function ReleaseComponent() {
     });
 
     try {
-      // await Promise.all(
-      //   selectedTrackObjects.map(
-      //     (track: { artists?: Array<{ name: string }>; title: string }) =>
-      //       scrobbleTracks({
-      //         artist: track.artists?.[0]?.name || release.artists[0].name,
-      //         track: track.title,
-      //         token: lastfmToken,
-      //         album: release.title,
-      //       })
-      //   )
-      // );
       await scrobbleTracks({
         artist: release.artists[0].name,
         token: lastfmToken,
@@ -69,11 +58,6 @@ function ReleaseComponent() {
   };
 
   const toggleTrack = (position: string) => {
-    console.log("toggle", {
-      position,
-      selectedTracks,
-    });
-
     const newSelected = new Set(selectedTracks);
     if (newSelected.has(position)) {
       newSelected.delete(position);

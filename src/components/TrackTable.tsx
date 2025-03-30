@@ -109,7 +109,10 @@ export function TrackTable({
       });
 
       // Handle select all case
-      if (newSelectedTracks.size === data.length) {
+      if (
+        newSelectedTracks.size === data.length ||
+        newSelectedTracks.size === 0
+      ) {
         onToggleAll();
       }
     },
