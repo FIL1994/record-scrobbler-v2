@@ -69,7 +69,7 @@ export async function getReleaseInfo(releaseId: number) {
   const token = import.meta.env.VITE_DISCOGS_TOKEN || "";
 
   const response = await fetch(
-    `${DISCOGS_API}/releases/${releaseId}?token=${token}`
+    `${DISCOGS_API}/releases/${releaseId}?token=${token}&page=1&per_page=1`
   );
 
   if (!response.ok) {

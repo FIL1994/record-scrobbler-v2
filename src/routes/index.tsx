@@ -4,16 +4,17 @@ import { type } from "arktype";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
+import { useLocalStorage } from "~/hooks/useLocalStorage";
 import { scrobbleTrack } from "~/services/lastfm";
 import type { Album } from "~/types";
 import { getSessionToken, getToken } from "~/utils/getToken";
+import { LocalStorageKeys } from "~/utils/localStorageKeys";
 import { discogsCollectionOptions } from "~/utils/queries";
 
 export const Route = createFileRoute("/")({
   component: Home,
   validateSearch: type({
     username: "string?",
-    token: "string?",
   }),
 });
 
@@ -23,8 +24,10 @@ enum FormNames {
 
 function Home() {
   const { username } = Route.useSearch({});
-  const navigate = Route.useNavigate();
-  const [savedUsername, setSavedUsername] = useState(username || "");
+  const [savedUsername, setSavedUsername] = useLocalStorage(
+    LocalStorageKeys.Username,
+    username || ""
+  );
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -79,12 +82,6 @@ function Home() {
           onSubmit={(e) => {
             e.preventDefault();
             setSavedUsername(e.currentTarget[FormNames.Username].value);
-            navigate({
-              replace: true,
-              search: {
-                username: e.currentTarget[FormNames.Username].value,
-              },
-            });
           }}
         >
           <input

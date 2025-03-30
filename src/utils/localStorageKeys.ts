@@ -1,4 +1,5 @@
-export const LocalStorageKeys = {
-  Token: "lastfm_token",
-  SessionToken: "lastfm_session_token",
-} as const;
+export enum LocalStorageKeys {
+  Token = "lastfm_token",
+  SessionToken = "lastfm_session_token",
+  Username = "discogs_username",
+}
