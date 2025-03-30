@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Music, Search } from "lucide-react";
+import { Search } from "lucide-react";
+import { Header } from "~/components/Header";
 import { useEffect, useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
 import { scrobbleTrack } from "~/services/lastfm";
@@ -8,9 +9,6 @@ import { Album } from "~/types";
 import { discogsCollectionOptions } from "~/utils/queries";
 import { type } from "arktype";
 import { getToken } from "~/utils/getToken";
-
-// const lastFMUrl = `http://www.last.fm/api/auth/?api_key=${import.meta.env.VITE_LASTFM_API_KEY}`;
-const lastFMUrl = `http://www.last.fm/api/auth/?api_key=${import.meta.env.VITE_LASTFM_API_KEY}&cb=${window.location.origin}/auth/lastfm/callback`;
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -35,12 +33,13 @@ function Home() {
   }, []);
 
   const {
-    data: collection,
+    data: collection = [],
     isLoading: loading,
     error,
   } = useQuery(discogsCollectionOptions(savedUsername));
 
   console.log("collectionData", {
+    savedUsername,
     collection,
     error,
   });
@@ -74,99 +73,77 @@ function Home() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Music className="text-red-600" size={24} />
-              <h1 className="text-xl font-bold text-gray-900">
-                Vinyl Collection Manager
-              </h1>
-            </div>
-            <a
-              href={lastFMUrl}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center gap-2"
-            >
-              <Music size={16} />
-              Sign in with Last.fm
-            </a>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8 space-y-4">
-          <form
-            className="flex gap-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setSavedUsername(e.currentTarget[FormNames.Username].value);
-              navigate({
-                replace: true,
-                search: {
-                  username: e.currentTarget[FormNames.Username].value,
-                  token: getToken(),
-                },
-              });
-            }}
+    <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mb-8 space-y-4">
+        <form
+          className="flex gap-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setSavedUsername(e.currentTarget[FormNames.Username].value);
+            navigate({
+              replace: true,
+              search: {
+                username: e.currentTarget[FormNames.Username].value,
+                token: getToken(),
+              },
+            });
+          }}
+        >
+          <input
+            type="text"
+            name={FormNames.Username}
+            autoComplete="on"
+            defaultValue={savedUsername}
+            placeholder="Enter your Discogs username"
+            className="flex-1 max-w-xs px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
+            {loading ? "Loading..." : "Fetch Collection"}
+          </button>
+        </form>
+        {error && <p className="mt-2 text-red-600">{error.message}</p>}
+
+        {collection.length > 0 && (
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400" />
+            </div>
             <input
               type="text"
-              name={FormNames.Username}
-              autoComplete="on"
-              defaultValue={savedUsername}
-              placeholder="Enter your Discogs username"
-              className="flex-1 max-w-xs px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by title, artist, or year..."
+              className="pl-10 w-full max-w-md px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             />
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? "Loading..." : "Fetch Collection"}
-            </button>
-          </form>
-          {error && <p className="mt-2 text-red-600">{error.message}</p>}
-
-          {collection.length > 0 && (
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by title, artist, or year..."
-                className="pl-10 w-full max-w-md px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredCollection.map((album, index) => (
-            <AlbumCard
-              key={`${album.title}-${index}`}
-              album={album}
-              onScrobble={handleScrobble}
-            />
-          ))}
-        </div>
-
-        {collection.length === 0 && !loading && (
-          <div className="text-center text-gray-500">
-            Enter your Discogs username to see your vinyl collection
           </div>
         )}
+      </div>
 
-        {collection.length > 0 && filteredCollection.length === 0 && (
-          <div className="text-center text-gray-500">
-            No albums found matching your search
-          </div>
-        )}
-      </main>
-    </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredCollection.map((album, index) => (
+          <AlbumCard
+            key={`${album.title}-${index}`}
+            album={album}
+            onScrobble={handleScrobble}
+          />
+        ))}
+      </div>
+
+      {collection.length === 0 && !loading && (
+        <div className="text-center text-gray-500">
+          Enter your Discogs username to see your vinyl collection
+        </div>
+      )}
+
+      {collection.length > 0 && filteredCollection.length === 0 && (
+        <div className="text-center text-gray-500">
+          No albums found matching your search
+        </div>
+      )}
+    </main>
   );
 }

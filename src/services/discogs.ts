@@ -65,7 +65,7 @@ export async function getCollection(username: string) {
  * Get the tracklist for a release
  * @see https://www.discogs.com/developers#page:database,header:database-release
  */
-export async function getTracklist(releaseId: number) {
+export async function getReleaseInfo(releaseId: number) {
   const token = import.meta.env.VITE_DISCOGS_TOKEN || "";
 
   const response = await fetch(
@@ -76,11 +76,5 @@ export async function getTracklist(releaseId: number) {
     throw new Error("Failed to fetch release tracklist");
   }
 
-  const data = (await response.json()) as DiscogsReleaseResponse;
-  return data.tracklist.map((track) => ({
-    title: track.title,
-    duration: track.duration,
-    position: track.position,
-    artist: track.artists?.[0]?.name || data.artists[0].name,
-  }));
+  return (await response.json()) as DiscogsReleaseResponse;
 }

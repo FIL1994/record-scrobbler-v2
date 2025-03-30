@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as ReleaseIdImport } from './routes/release.$id'
 import { Route as AuthLastfmCallbackImport } from './routes/auth.lastfm.callback'
 import { Route as AuthDiscogsCallbackImport } from './routes/auth.discogs.callback'
 
@@ -20,6 +21,12 @@ import { Route as AuthDiscogsCallbackImport } from './routes/auth.discogs.callba
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ReleaseIdRoute = ReleaseIdImport.update({
+  id: '/release/$id',
+  path: '/release/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -46,6 +53,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/release/$id': {
+      id: '/release/$id'
+      path: '/release/$id'
+      fullPath: '/release/$id'
+      preLoaderRoute: typeof ReleaseIdImport
+      parentRoute: typeof rootRoute
+    }
     '/auth/discogs/callback': {
       id: '/auth/discogs/callback'
       path: '/auth/discogs/callback'
@@ -67,12 +81,14 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
   '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
   '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
 }
@@ -80,27 +96,39 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
   '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth/discogs/callback' | '/auth/lastfm/callback'
+  fullPaths:
+    | '/'
+    | '/release/$id'
+    | '/auth/discogs/callback'
+    | '/auth/lastfm/callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth/discogs/callback' | '/auth/lastfm/callback'
-  id: '__root__' | '/' | '/auth/discogs/callback' | '/auth/lastfm/callback'
+  to: '/' | '/release/$id' | '/auth/discogs/callback' | '/auth/lastfm/callback'
+  id:
+    | '__root__'
+    | '/'
+    | '/release/$id'
+    | '/auth/discogs/callback'
+    | '/auth/lastfm/callback'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ReleaseIdRoute: typeof ReleaseIdRoute
   AuthDiscogsCallbackRoute: typeof AuthDiscogsCallbackRoute
   AuthLastfmCallbackRoute: typeof AuthLastfmCallbackRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ReleaseIdRoute: ReleaseIdRoute,
   AuthDiscogsCallbackRoute: AuthDiscogsCallbackRoute,
   AuthLastfmCallbackRoute: AuthLastfmCallbackRoute,
 }
@@ -116,12 +144,16 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/release/$id",
         "/auth/discogs/callback",
         "/auth/lastfm/callback"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/release/$id": {
+      "filePath": "release.$id.tsx"
     },
     "/auth/discogs/callback": {
       "filePath": "auth.discogs.callback.tsx"

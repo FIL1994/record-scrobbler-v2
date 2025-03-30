@@ -28,8 +28,6 @@ export const APIRoute = createAPIFileRoute("/api/sign")({
     const rawParams = await request.json();
     const params = paramsType(rawParams);
 
-    console.log("validate", params);
-
     if (params instanceof type.errors) {
       return json(
         { error: `Invalid parameters: ${params.summary}` },

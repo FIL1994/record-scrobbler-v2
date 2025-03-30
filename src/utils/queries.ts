@@ -1,17 +1,17 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getCollection, getTracklist } from "~/services/discogs";
+import { getCollection, getReleaseInfo } from "~/services/discogs";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
-import { getUserInfo } from "~/services/lastfm";
+import { getSession, getUserInfo } from "~/services/lastfm";
 import { getToken } from "./getToken";
 
 const queryKeyStore = createQueryKeyStore({
   discogs: {
-    collection: (username: string) => ["discogs", username],
-    tracklist: (releaseId: number) => ["discogs", releaseId, "tracklist"],
+    collection: (username: string) => [username],
+    release: (releaseId: number) => [releaseId],
   },
   lastfm: {
-    session: (token: string) => ["lastfm", token],
-    userInfo: (sessionToken: string) => ["lastfm", sessionToken, "user-info"],
+    session: (token: string) => [token],
+    userInfo: (sessionToken: string) => [sessionToken, "user-info"],
   },
 });
 
@@ -24,23 +24,32 @@ export const discogsCollectionOptions = (username: string) => {
     enabled: Boolean(username),
     select: (data) =>
       data.map((release) => ({
+        id: release.id,
         title: release.basic_information.title,
         artist: release.basic_information.artists[0].name,
         year: release.basic_information.year,
         coverImage: release.basic_information.cover_image,
       })),
     retry: false,
-    initialData: [],
+    placeholderData: [],
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
   });
 };
 
-export const discogsTracklistOptions = (releaseId: number) => {
-  const key = queryKeyStore.discogs.tracklist(releaseId).queryKey;
+export const discogsReleaseOptions = (releaseId: number) => {
+  const key = queryKeyStore.discogs.release(releaseId).queryKey;
 
   return queryOptions({
     queryKey: key,
-    queryFn: () => getTracklist(releaseId),
+    queryFn: () => getReleaseInfo(releaseId),
     retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
   });
 };
 
@@ -50,18 +59,19 @@ export const lastfmSessionOptions = () => {
 
   return queryOptions({
     queryKey: key,
-    queryFn: () => getUserInfo(token!),
+    queryFn: () => getSession(token!),
     retry: false,
     enabled: Boolean(token),
   });
 };
 
-export const lastfmUserInfoOptions = (sessionToken: string) => {
-  const key = queryKeyStore.lastfm.session(sessionToken).queryKey;
+export const lastfmUserInfoOptions = (sessionToken: string | undefined) => {
+  const key = queryKeyStore.lastfm.session(sessionToken!).queryKey;
 
   return queryOptions({
     queryKey: key,
-    queryFn: () => getUserInfo(sessionToken),
+    queryFn: () => getUserInfo(sessionToken!),
     retry: false,
+    enabled: Boolean(sessionToken),
   });
 };

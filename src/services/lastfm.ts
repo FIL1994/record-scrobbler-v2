@@ -10,7 +10,9 @@ async function getSignature(params: URLSearchParams) {
 }
 
 /**
- * Get a session key from Last.fm
+ * Get a session key from Last.fm.
+ * Session keys have an infinite lifetime by default. You are recommended to store the key securely.
+ * Users are able to revoke privileges for your application on their Last.fm settings screen, rendering session keys invalid.
  * @see https://www.last.fm/api/webauth
  * @see https://www.last.fm/api/show/auth.getSession
  * @param token - The authentication token received at your callback url as a GET variable
@@ -34,7 +36,7 @@ export async function getSession(token: string) {
     throw new Error("Failed to get session");
   }
 
-  return (await response.json()).session.key;
+  return (await response.json()).session.key as string;
 }
 
 /**

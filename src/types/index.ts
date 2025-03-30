@@ -12,6 +12,7 @@ export interface DiscogsRelease {
 }
 
 export interface Album {
+  id: number;
   title: string;
   artist: string;
   year: number;
@@ -35,11 +36,19 @@ export interface DiscogsTrack {
 
 export interface DiscogsReleaseResponse {
   id: number;
+  year: number;
   title: string;
   artists: Array<{
     name: string;
     id: number;
+    thumbnail_url: string;
   }>;
   tracklist: DiscogsTrack[];
-  year: number;
+  images: {
+    type: "primary" | "secondary";
+    uri: string;
+    uri150: string;
+    width: number;
+    height: number;
+  }[];
 }
