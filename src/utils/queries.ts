@@ -1,8 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getCollection, getReleaseInfo } from "~/services/discogs";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
-import { getSession, getUserInfo } from "~/services/lastfm";
-import { getToken } from "./getToken";
+import { getUserInfo } from "~/services/lastfm";
+import { getSessionToken } from "./getToken";
 
 const queryKeyStore = createQueryKeyStore({
   discogs: {
@@ -10,7 +10,6 @@ const queryKeyStore = createQueryKeyStore({
     release: (releaseId: number) => [releaseId],
   },
   lastfm: {
-    session: (token: string) => [token],
     userInfo: (sessionToken: string) => [sessionToken, "user-info"],
   },
 });
@@ -53,20 +52,9 @@ export const discogsReleaseOptions = (releaseId: number) => {
   });
 };
 
-export const lastfmSessionOptions = () => {
-  const token = getToken();
-  const key = queryKeyStore.lastfm.session(token!).queryKey;
-
-  return queryOptions({
-    queryKey: key,
-    queryFn: () => getSession(token!),
-    retry: false,
-    enabled: Boolean(token),
-  });
-};
-
-export const lastfmUserInfoOptions = (sessionToken: string | undefined) => {
-  const key = queryKeyStore.lastfm.session(sessionToken!).queryKey;
+export const lastfmUserInfoOptions = () => {
+  const sessionToken = getSessionToken();
+  const key = queryKeyStore.lastfm.userInfo(sessionToken!).queryKey;
 
   return queryOptions({
     queryKey: key,

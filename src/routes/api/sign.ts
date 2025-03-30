@@ -31,13 +31,13 @@ export const APIRoute = createAPIFileRoute("/api/sign")({
     if (params instanceof type.errors) {
       return json(
         { error: `Invalid parameters: ${params.summary}` },
-        { status: 400 }, // BadRequest
+        { status: 400 } // BadRequest
       );
     }
 
     // 1. Sort parameters alphabetically
     const sortedParams = Object.entries(params).sort(([a], [b]) =>
-      a.localeCompare(b, "en-US"),
+      a.localeCompare(b, "en-US")
     );
 
     // 2. Concatenate parameters in name+value format

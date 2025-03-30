@@ -7,7 +7,7 @@ export const Route = createFileRoute("/auth/discogs/callback")({
   //   oauth_verifier: "string?",
   // }),
   validateSearch: type(
-    "Record<string, string | number | boolean | null | undefined>",
+    "Record<string, string | number | boolean | null | undefined>"
   ),
   beforeLoad: ({ search }) => {
     const { oauth_token, oauth_verifier } = search;

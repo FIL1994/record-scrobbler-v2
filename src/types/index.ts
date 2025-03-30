@@ -52,3 +52,18 @@ export interface DiscogsReleaseResponse {
     height: number;
   }[];
 }
+
+export interface LastfmUserInfoResponse {
+  user: {
+    name: string;
+    image: {
+      "#text": string;
+      size: "small" | "medium" | "large" | "extralarge";
+    }[];
+    /** URL to the user's profile */
+    url: string;
+    album_count: string;
+    artist_count: string;
+    playcount: string;
+  };
+}
