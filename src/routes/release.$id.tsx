@@ -63,6 +63,14 @@ function ReleaseComponent() {
     setSelectedTracks(newSelected);
   };
 
+  const toggleAll = () => {
+    if (selectedTracks.size === release.tracklist.length) {
+      setSelectedTracks(new Set());
+    } else {
+      setSelectedTracks(new Set(release.tracklist.map((t) => t.position)));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -104,57 +112,70 @@ function ReleaseComponent() {
           </div>
 
           <div className="border-t border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Select
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    #
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Title
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Duration
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {release.tracklist.map(
-                  (track: {
-                    position: string;
-                    title: string;
-                    duration: string;
-                  }) => (
-                    <tr
-                      key={track.position}
-                      className="hover:bg-gray-50 cursor-pointer"
-                      onClick={() => toggleTrack(track.position)}
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
+            <div className="max-h-[600px] overflow-y-auto">
+              <table className="min-w-full divide-y divide-gray-200 relative">
+                <thead className="bg-gray-50 sticky top-0 z-10">
+                  <tr>
+                    <th className="w-16 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <div className="flex items-center justify-center">
                         <input
                           type="checkbox"
-                          checked={selectedTracks.has(track.position)}
-                          onChange={() => toggleTrack(track.position)}
+                          checked={
+                            selectedTracks.size === release.tracklist.length
+                          }
+                          onChange={toggleAll}
                           className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
                         />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {track.position}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {track.title}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {track.duration}
-                      </td>
-                    </tr>
-                  ),
-                )}
-              </tbody>
-            </table>
+                      </div>
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      #
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Title
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Duration
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {release.tracklist.map(
+                    (track: {
+                      position: string;
+                      title: string;
+                      duration: string;
+                    }) => (
+                      <tr
+                        key={track.position}
+                        className="hover:bg-gray-50 cursor-pointer"
+                        onClick={() => toggleTrack(track.position)}
+                      >
+                        <td className="w-16 px-3 py-4 whitespace-nowrap">
+                          <div className="flex justify-center">
+                            <input
+                              type="checkbox"
+                              checked={selectedTracks.has(track.position)}
+                              onChange={() => toggleTrack(track.position)}
+                              className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                            />
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {track.position}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {track.title}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {track.duration}
+                        </td>
+                      </tr>
+                    ),
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
