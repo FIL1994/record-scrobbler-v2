@@ -75,6 +75,7 @@ export function TrackTable({
       ),
     },
     onRowSelectionChange: (updater: any) => {
+      // TODO - fix onToggleTrack logic
       const newSelection =
         typeof updater === "function" ? updater({}) : updater;
       const selectedPositions = Object.entries(newSelection)

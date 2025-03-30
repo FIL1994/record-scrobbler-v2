@@ -69,6 +69,11 @@ function ReleaseComponent() {
   };
 
   const toggleTrack = (position: string) => {
+    console.log("toggle", {
+      position,
+      selectedTracks,
+    });
+
     const newSelected = new Set(selectedTracks);
     if (newSelected.has(position)) {
       newSelected.delete(position);
