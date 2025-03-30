@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getCollection, getReleaseInfo } from "~/services/discogs";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
-import { getUserInfo } from "~/services/lastfm";
+import { getSession, getUserInfo } from "~/services/lastfm";
 import { getToken } from "./getToken";
 
 const queryKeyStore = createQueryKeyStore({
@@ -59,18 +59,19 @@ export const lastfmSessionOptions = () => {
 
   return queryOptions({
     queryKey: key,
-    queryFn: () => getUserInfo(token!),
+    queryFn: () => getSession(token!),
     retry: false,
     enabled: Boolean(token),
   });
 };
 
-export const lastfmUserInfoOptions = (sessionToken: string) => {
-  const key = queryKeyStore.lastfm.session(sessionToken).queryKey;
+export const lastfmUserInfoOptions = (sessionToken: string | undefined) => {
+  const key = queryKeyStore.lastfm.session(sessionToken!).queryKey;
 
   return queryOptions({
     queryKey: key,
-    queryFn: () => getUserInfo(sessionToken),
+    queryFn: () => getUserInfo(sessionToken!),
     retry: false,
+    enabled: Boolean(sessionToken),
   });
 };

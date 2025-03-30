@@ -9,6 +9,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
+import { Header } from "~/components/Header";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -47,7 +48,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <div className="min-h-screen bg-gray-100">
+          <Header />
+
+          {children}
+        </div>
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools buttonPosition="bottom-left" />
         <Scripts />
