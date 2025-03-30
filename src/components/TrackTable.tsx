@@ -71,7 +71,7 @@ export function TrackTable({
     enableRowSelection: true,
     state: {
       rowSelection: Object.fromEntries(
-        data.map((track, index) => [index, selectedTracks.has(track.position)]),
+        data.map((track, index) => [index, selectedTracks.has(track.position)])
       ),
     },
     onRowSelectionChange: (updater: any) => {
@@ -116,10 +116,10 @@ export function TrackTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </th>
-                ),
+                )
               )}
             </tr>
           ))}

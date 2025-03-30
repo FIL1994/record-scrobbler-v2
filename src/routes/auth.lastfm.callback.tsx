@@ -8,7 +8,7 @@ import { LocalStorageKeys } from "~/utils/localStorageKeys";
 export const Route = createFileRoute("/auth/lastfm/callback")({
   component: LastfmCallback,
   validateSearch: type(
-    "Record<string, string | number | boolean | null | undefined>",
+    "Record<string, string | number | boolean | null | undefined>"
   ),
 });
 

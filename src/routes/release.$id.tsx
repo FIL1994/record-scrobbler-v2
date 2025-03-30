@@ -32,7 +32,7 @@ function ReleaseComponent() {
     }
 
     const selectedTrackObjects = release.tracklist.filter(
-      (track: { position: string }) => selectedTracks.has(track.position),
+      (track: { position: string }) => selectedTracks.has(track.position)
     );
 
     try {
@@ -44,8 +44,8 @@ function ReleaseComponent() {
               track: track.title,
               token: lastfmToken,
               album: release.title,
-            }),
-        ),
+            })
+        )
       );
       console.log("Successfully scrobbled tracks!");
       setSelectedTracks(new Set());
