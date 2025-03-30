@@ -45,15 +45,15 @@ export async function getSession(token: string) {
  * Scrobble a track to Last.fm
  * @see https://www.last.fm/api/show/track.scrobble
  */
-export async function scrobbleTrack({
+export async function scrobbleTracks({
   artist,
-  track,
+  tracks,
   token,
   album,
   cbUrl,
 }: {
   artist: string;
-  track: string;
+  tracks: string[];
   token: string;
   album?: string;
   cbUrl?: string;
@@ -63,15 +63,18 @@ export async function scrobbleTrack({
 
   const params = new URLSearchParams({
     method: "track.scrobble",
-    artist,
-    track,
     timestamp: timestamp.toString(),
     api_key: API_KEY,
     sk: token,
   });
 
-  if (album) {
-    params.set("album", album);
+  for (let i = 0; i < tracks.length; i++) {
+    params.set(`artist[${i}]`, artist);
+    params.set(`track[${i}]`, tracks[i]);
+
+    if (album) {
+      params.set(`album[${i}]`, album);
+    }
   }
 
   if (cbUrl) {

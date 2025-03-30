@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Share2 } from "lucide-react";
 import { useState } from "react";
 import { TrackTable } from "~/components/TrackTable";
-import { scrobbleTrack } from "~/services/lastfm";
+import { scrobbleTracks } from "~/services/lastfm";
 import { getSessionToken } from "~/utils/getToken";
 import { discogsReleaseOptions } from "~/utils/queries";
 
@@ -35,18 +35,32 @@ function ReleaseComponent() {
       (track: { position: string }) => selectedTracks.has(track.position)
     );
 
+    scrobbleTracks({
+      artist: release.artists[0].name,
+      token: lastfmToken,
+      album: release.title,
+      tracks: selectedTrackObjects.map((track) => track.title),
+    });
+
     try {
-      await Promise.all(
-        selectedTrackObjects.map(
-          (track: { artists?: Array<{ name: string }>; title: string }) =>
-            scrobbleTrack({
-              artist: track.artists?.[0]?.name || release.artists[0].name,
-              track: track.title,
-              token: lastfmToken,
-              album: release.title,
-            })
-        )
-      );
+      // await Promise.all(
+      //   selectedTrackObjects.map(
+      //     (track: { artists?: Array<{ name: string }>; title: string }) =>
+      //       scrobbleTracks({
+      //         artist: track.artists?.[0]?.name || release.artists[0].name,
+      //         track: track.title,
+      //         token: lastfmToken,
+      //         album: release.title,
+      //       })
+      //   )
+      // );
+      await scrobbleTracks({
+        artist: release.artists[0].name,
+        token: lastfmToken,
+        album: release.title,
+        tracks: selectedTrackObjects.map((track) => track.title),
+      });
+
       console.log("Successfully scrobbled tracks!");
       setSelectedTracks(new Set());
     } catch (err) {
