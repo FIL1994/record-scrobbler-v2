@@ -1,0 +1,21 @@
+Libraries
+- use bun for installing dependencies and running tasks
+- use tailwind for styling
+
+Code Style
+- Prefer named exports over default exports
+- Prefer function declarations over arrow functions unless it can have an implicit return
+- Use camelCase
+- Use PascalCase for component names and enums
+- Prefer tailwind clases over inline styles
+
+Formatting
+- Use consistent Tailwind class ordering 
+
+Types
+- Prefer interfaces over types
+- Do not use "any" in TypeScript
+- Use React.PropsWithChildren instead of children prop
+- Use T[] instead of Array<T>
+- Do not use {} for empty objects, use Record<string, never>
+- Do not use the enum keyword, use `as const` instead
