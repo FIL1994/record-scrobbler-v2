@@ -43,6 +43,12 @@ const columns: ColumnDef<DiscogsTrack>[] = [
     ),
   },
   {
+    id: "trackNumber",
+    header: "Track",
+    size: 60,
+    cell: ({ row }) => row.index + 1,
+  },
+  {
     accessorKey: "position",
     header: "#",
     size: 80,
@@ -74,27 +80,40 @@ export function TrackTable({
         data.map((track, index) => [index, selectedTracks.has(track.position)])
       ),
     },
-    onRowSelectionChange: (updater: any) => {
+    onRowSelectionChange: (updater) => {
       const newSelection =
-        typeof updater === "function" ? updater({}) : updater;
-      const selectedPositions = Object.entries(newSelection)
-        .filter(([_, isSelected]) => isSelected)
-        .map(([index]) => data[Number(index)].position);
+        typeof updater === "function"
+          ? updater(table.getState().rowSelection)
+          : updater;
+      const newSelectedTracks = new Set<string>();
 
-      if (selectedPositions.length === data.length) {
+      Object.entries(newSelection).forEach(([index, isSelected]) => {
+        const position = data[Number(index)].position;
+        if (isSelected) {
+          newSelectedTracks.add(position);
+        }
+      });
+
+      // Toggle tracks that were added
+      newSelectedTracks.forEach((position) => {
+        if (!selectedTracks.has(position)) {
+          onToggleTrack(position);
+        }
+      });
+
+      // Toggle tracks that were removed
+      selectedTracks.forEach((position) => {
+        if (!newSelectedTracks.has(position)) {
+          onToggleTrack(position);
+        }
+      });
+
+      // Handle select all case
+      if (
+        newSelectedTracks.size === data.length ||
+        newSelectedTracks.size === 0
+      ) {
         onToggleAll();
-      } else {
-        selectedPositions.forEach((position) => {
-          if (!selectedTracks.has(position)) {
-            onToggleTrack(position);
-          }
-        });
-
-        selectedTracks.forEach((position) => {
-          if (!selectedPositions.includes(position)) {
-            onToggleTrack(position);
-          }
-        });
       }
     },
   });

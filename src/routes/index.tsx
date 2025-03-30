@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
 import { useLocalStorage } from "~/hooks/useLocalStorage";
-import { scrobbleTrack } from "~/services/lastfm";
+import { scrobbleTracks } from "~/services/lastfm";
 import type { Album } from "~/types";
 import { getSessionToken, getToken } from "~/utils/getToken";
 import { LocalStorageKeys } from "~/utils/localStorageKeys";
@@ -53,9 +53,9 @@ function Home() {
     }
 
     try {
-      await scrobbleTrack({
+      await scrobbleTracks({
         artist: album.artist,
-        track: album.title,
+        tracks: [album.title],
         album: album.title,
         token: lastfmToken,
       });

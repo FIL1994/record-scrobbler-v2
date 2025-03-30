@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Music } from "lucide-react";
+import { Disc3, Music } from "lucide-react";
 import { lastfmUserInfoOptions } from "~/utils/queries";
 import { isBrowser } from "~/utils/common";
 
@@ -20,9 +20,9 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Music className="text-red-600" size={24} />
+            <Disc3 className="text-red-600" size={24} />
             <h1 className="text-xl font-bold text-gray-900">
-              Vinyl Collection Manager
+              Record Scrobbler V2
             </h1>
           </div>
           {userInfo ? (
