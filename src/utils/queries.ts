@@ -1,5 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getCollection, getTracklist } from "~/services/discogs";
+import { getCollection, getReleaseInfo } from "~/services/discogs";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import { getUserInfo } from "~/services/lastfm";
 import { getToken } from "./getToken";
@@ -7,7 +7,7 @@ import { getToken } from "./getToken";
 const queryKeyStore = createQueryKeyStore({
   discogs: {
     collection: (username: string) => [username],
-    tracklist: (releaseId: number) => [releaseId, "tracklist"],
+    release: (releaseId: number) => [releaseId],
   },
   lastfm: {
     session: (token: string) => [token],
@@ -39,12 +39,12 @@ export const discogsCollectionOptions = (username: string) => {
   });
 };
 
-export const discogsTracklistOptions = (releaseId: number) => {
-  const key = queryKeyStore.discogs.tracklist(releaseId).queryKey;
+export const discogsReleaseOptions = (releaseId: number) => {
+  const key = queryKeyStore.discogs.release(releaseId).queryKey;
 
   return queryOptions({
     queryKey: key,
-    queryFn: () => getTracklist(releaseId),
+    queryFn: () => getReleaseInfo(releaseId),
     retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
