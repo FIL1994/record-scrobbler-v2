@@ -61,7 +61,7 @@ export interface LastfmUserInfoResponse {
       size: "small" | "medium" | "large" | "extralarge";
     }[];
     /** URL to the user's profile */
-    user: string;
+    url: string;
     album_count: string;
     artist_count: string;
     playcount: string;

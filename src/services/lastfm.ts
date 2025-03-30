@@ -119,5 +119,6 @@ export async function getUserInfo(token: string) {
     throw new Error("Failed to get user info");
   }
 
-  return (await response.json()) as LastfmUserInfoResponse;
+  const data = (await response.json()) as LastfmUserInfoResponse;
+  return data.user;
 }

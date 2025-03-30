@@ -9,14 +9,6 @@ export function getToken() {
     return undefined;
   }
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const urlToken = urlParams.get("token");
-
-  if (urlToken) {
-    localStorage.setItem(LocalStorageKeys.Token, urlToken);
-    return urlToken;
-  }
-
   const storedToken = localStorage.getItem(LocalStorageKeys.Token);
   if (storedToken) {
     return storedToken;
@@ -31,14 +23,6 @@ export function getToken() {
 export function getSessionToken() {
   if (!isBrowser()) {
     return undefined;
-  }
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const urlToken = urlParams.get("token");
-
-  if (urlToken) {
-    localStorage.setItem(LocalStorageKeys.SessionToken, urlToken);
-    return urlToken;
   }
 
   const storedToken = localStorage.getItem(LocalStorageKeys.SessionToken);
