@@ -63,7 +63,6 @@ export async function scrobbleTracks({
 
   const params = new URLSearchParams({
     method: "track.scrobble",
-    timestamp: timestamp.toString(),
     api_key: API_KEY,
     sk: token,
   });
@@ -71,6 +70,7 @@ export async function scrobbleTracks({
   for (let i = 0; i < tracks.length; i++) {
     params.set(`artist[${i}]`, artist);
     params.set(`track[${i}]`, tracks[i]);
+    params.set(`timestamp[${i}]`, timestamp.toString());
 
     if (album) {
       params.set(`album[${i}]`, album);
