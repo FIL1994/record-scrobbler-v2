@@ -43,6 +43,12 @@ const columns: ColumnDef<DiscogsTrack>[] = [
     ),
   },
   {
+    id: "trackNumber",
+    header: "Track",
+    size: 60,
+    cell: ({ row }) => row.index + 1,
+  },
+  {
     accessorKey: "position",
     header: "#",
     size: 80,
