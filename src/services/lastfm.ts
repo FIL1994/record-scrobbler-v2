@@ -1,3 +1,5 @@
+import type { LastfmUserInfoResponse } from "~/types";
+
 const LASTFM_API = "https://ws.audioscrobbler.com/2.0/";
 const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
 
@@ -59,16 +61,13 @@ export async function scrobbleTrack({
   // UNIX timestamp. Seconds since epoch. Must be in UTC time zone
   const timestamp = Math.floor(Date.now() / 1000);
 
-  const session = await getSession(token);
-  console.log({ session });
-
   const params = new URLSearchParams({
     method: "track.scrobble",
     artist,
     track,
     timestamp: timestamp.toString(),
     api_key: API_KEY,
-    sk: session,
+    sk: token,
   });
 
   if (album) {
@@ -120,5 +119,5 @@ export async function getUserInfo(token: string) {
     throw new Error("Failed to get user info");
   }
 
-  return response.json();
+  return (await response.json()) as LastfmUserInfoResponse;
 }

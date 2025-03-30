@@ -1,14 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { type } from "arktype";
 import { Search } from "lucide-react";
-import { Header } from "~/components/Header";
 import { useEffect, useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
 import { scrobbleTrack } from "~/services/lastfm";
-import { Album } from "~/types";
+import type { Album } from "~/types";
+import { getSessionToken, getToken } from "~/utils/getToken";
 import { discogsCollectionOptions } from "~/utils/queries";
-import { type } from "arktype";
-import { getToken } from "~/utils/getToken";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -45,7 +44,7 @@ function Home() {
   });
 
   const handleScrobble = async (album: Album) => {
-    const lastfmToken = getToken();
+    const lastfmToken = getSessionToken();
     if (!lastfmToken) {
       throw new Error("No Last.fm token found");
     }
@@ -84,7 +83,6 @@ function Home() {
               replace: true,
               search: {
                 username: e.currentTarget[FormNames.Username].value,
-                token: getToken(),
               },
             });
           }}

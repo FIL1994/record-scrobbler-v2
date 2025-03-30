@@ -8,7 +8,7 @@ import {
   type Header,
   type Cell,
 } from "@tanstack/react-table";
-import { DiscogsTrack } from "~/types";
+import type { DiscogsTrack } from "~/types";
 
 interface TrackTableProps {
   data: DiscogsTrack[];

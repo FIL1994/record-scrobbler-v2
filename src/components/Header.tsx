@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Music } from "lucide-react";
-import { getToken } from "~/utils/getToken";
-import { lastfmSessionOptions, lastfmUserInfoOptions } from "~/utils/queries";
+import { lastfmUserInfoOptions } from "~/utils/queries";
 
 function getLastfmUrl() {
   let url = `http://www.last.fm/api/auth/?api_key=${import.meta.env.VITE_LASTFM_API_KEY}`;
@@ -13,10 +12,9 @@ function getLastfmUrl() {
 }
 
 export function Header() {
-  const { data: session } = useQuery(lastfmSessionOptions());
-  const { data: userInfo } = useQuery(lastfmUserInfoOptions(session));
+  const { data: userInfo } = useQuery(lastfmUserInfoOptions());
 
-  console.log({ token: getToken(), session, userInfo });
+  console.log({ userInfo });
 
   return (
     <header className="bg-white shadow-sm">

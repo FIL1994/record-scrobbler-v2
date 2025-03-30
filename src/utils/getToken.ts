@@ -1,11 +1,11 @@
+import { isBrowser } from "./common";
 import { LocalStorageKeys } from "./localStorageKeys";
 
 /**
- * Get the Last.fm session token from URL or localStorage
+ * Get the Last.fm token from URL or localStorage
  */
 export function getToken() {
-  const isBrowser = typeof window !== "undefined";
-  if (!isBrowser) {
+  if (!isBrowser()) {
     return undefined;
   }
 
@@ -18,6 +18,30 @@ export function getToken() {
   }
 
   const storedToken = localStorage.getItem(LocalStorageKeys.Token);
+  if (storedToken) {
+    return storedToken;
+  }
+
+  return undefined;
+}
+
+/**
+ * Get the Last.fm session token from URL or localStorage
+ */
+export function getSessionToken() {
+  if (!isBrowser()) {
+    return undefined;
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlToken = urlParams.get("token");
+
+  if (urlToken) {
+    localStorage.setItem(LocalStorageKeys.SessionToken, urlToken);
+    return urlToken;
+  }
+
+  const storedToken = localStorage.getItem(LocalStorageKeys.SessionToken);
   if (storedToken) {
     return storedToken;
   }

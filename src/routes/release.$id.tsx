@@ -4,7 +4,7 @@ import { ArrowLeft, Share2 } from "lucide-react";
 import { useState } from "react";
 import { TrackTable } from "~/components/TrackTable";
 import { scrobbleTrack } from "~/services/lastfm";
-import { getToken } from "~/utils/getToken";
+import { getSessionToken } from "~/utils/getToken";
 import { discogsReleaseOptions } from "~/utils/queries";
 
 export const Route = createFileRoute("/release/$id")({
@@ -26,7 +26,7 @@ function ReleaseComponent() {
 
   const coverImage = release.images?.[0]?.uri;
   const handleScrobble = async () => {
-    const lastfmToken = getToken();
+    const lastfmToken = getSessionToken();
     if (!lastfmToken) {
       throw new Error("No Last.fm token found");
     }
@@ -73,53 +73,51 @@ function ReleaseComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
-        >
-          <ArrowLeft size={20} />
-          Back to Collection
-        </Link>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <Link
+        to="/"
+        className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
+      >
+        <ArrowLeft size={20} />
+        Back to Collection
+      </Link>
 
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="p-6 flex gap-6">
-            {coverImage && (
-              <img
-                src={coverImage}
-                alt={`${release.title} cover`}
-                className="w-48 h-48 object-cover rounded-md"
-              />
-            )}
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {release.title}
-              </h1>
-              <p className="text-lg text-gray-600">{release.artists[0].name}</p>
-              <p className="text-gray-500">{release.year}</p>
-
-              {selectedTracks.size > 0 && (
-                <button
-                  onClick={handleScrobble}
-                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-                >
-                  <Share2 size={16} />
-                  Scrobble {selectedTracks.size} Track
-                  {selectedTracks.size === 1 ? "" : "s"}
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200">
-            <TrackTable
-              data={release.tracklist}
-              selectedTracks={selectedTracks}
-              onToggleTrack={toggleTrack}
-              onToggleAll={toggleAll}
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="p-6 flex gap-6">
+          {coverImage && (
+            <img
+              src={coverImage}
+              alt={`${release.title} cover`}
+              className="w-48 h-48 object-cover rounded-md"
             />
+          )}
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {release.title}
+            </h1>
+            <p className="text-lg text-gray-600">{release.artists[0].name}</p>
+            <p className="text-gray-500">{release.year}</p>
+
+            {selectedTracks.size > 0 && (
+              <button
+                onClick={handleScrobble}
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+              >
+                <Share2 size={16} />
+                Scrobble {selectedTracks.size} Track
+                {selectedTracks.size === 1 ? "" : "s"}
+              </button>
+            )}
           </div>
+        </div>
+
+        <div className="border-t border-gray-200">
+          <TrackTable
+            data={release.tracklist}
+            selectedTracks={selectedTracks}
+            onToggleTrack={toggleTrack}
+            onToggleAll={toggleAll}
+          />
         </div>
       </div>
     </div>
