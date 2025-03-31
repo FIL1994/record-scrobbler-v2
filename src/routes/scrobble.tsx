@@ -7,7 +7,7 @@ import { ScrobbleForm } from "~/components/scrobble/ScrobbleForm";
 import { ScrobbleHistory } from "~/components/scrobble/ScrobbleHistory";
 import type { ScrobbleFormData } from "~/components/scrobble/ScrobbleForm";
 
-export const Route = createFileRoute("/manual")({
+export const Route = createFileRoute("/scrobble")({
   component: RouteComponent,
   head: (_ctx) => ({
     meta: [
