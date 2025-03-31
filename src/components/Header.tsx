@@ -22,7 +22,7 @@ export function Header() {
           <div className="flex items-center gap-2">
             <Disc3 className="text-red-600" size={24} />
             <h1 className="text-xl font-bold text-gray-900">
-              Record Scrobbler V2
+              Record Scrobbler
             </h1>
           </div>
           {userInfo ? (

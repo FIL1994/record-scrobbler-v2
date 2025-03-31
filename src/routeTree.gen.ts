@@ -11,12 +11,19 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ManualImport } from './routes/manual'
 import { Route as IndexImport } from './routes/index'
 import { Route as ReleaseIdImport } from './routes/release.$id'
 import { Route as AuthLastfmCallbackImport } from './routes/auth.lastfm.callback'
 import { Route as AuthDiscogsCallbackImport } from './routes/auth.discogs.callback'
 
 // Create/Update Routes
+
+const ManualRoute = ManualImport.update({
+  id: '/manual',
+  path: '/manual',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -53,6 +60,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/manual': {
+      id: '/manual'
+      path: '/manual'
+      fullPath: '/manual'
+      preLoaderRoute: typeof ManualImport
+      parentRoute: typeof rootRoute
+    }
     '/release/$id': {
       id: '/release/$id'
       path: '/release/$id'
@@ -81,6 +95,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/manual': typeof ManualRoute
   '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
   '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
@@ -88,6 +103,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/manual': typeof ManualRoute
   '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
   '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
@@ -96,6 +112,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/manual': typeof ManualRoute
   '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
   '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
@@ -105,14 +122,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/manual'
     | '/release/$id'
     | '/auth/discogs/callback'
     | '/auth/lastfm/callback'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/release/$id' | '/auth/discogs/callback' | '/auth/lastfm/callback'
+  to:
+    | '/'
+    | '/manual'
+    | '/release/$id'
+    | '/auth/discogs/callback'
+    | '/auth/lastfm/callback'
   id:
     | '__root__'
     | '/'
+    | '/manual'
     | '/release/$id'
     | '/auth/discogs/callback'
     | '/auth/lastfm/callback'
@@ -121,6 +145,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ManualRoute: typeof ManualRoute
   ReleaseIdRoute: typeof ReleaseIdRoute
   AuthDiscogsCallbackRoute: typeof AuthDiscogsCallbackRoute
   AuthLastfmCallbackRoute: typeof AuthLastfmCallbackRoute
@@ -128,6 +153,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ManualRoute: ManualRoute,
   ReleaseIdRoute: ReleaseIdRoute,
   AuthDiscogsCallbackRoute: AuthDiscogsCallbackRoute,
   AuthLastfmCallbackRoute: AuthLastfmCallbackRoute,
@@ -144,6 +170,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/manual",
         "/release/$id",
         "/auth/discogs/callback",
         "/auth/lastfm/callback"
@@ -151,6 +178,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/manual": {
+      "filePath": "manual.tsx"
     },
     "/release/$id": {
       "filePath": "release.$id.tsx"
