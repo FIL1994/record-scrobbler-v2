@@ -10,9 +10,10 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 import { Header } from "~/components/Header";
+import { I18nProvider, useLocale } from "react-aria-components";
 
 export const Route = createRootRoute({
-  head: () => ({
+  head: (_ctx) => ({
     meta: [
       { charSet: "utf-8" },
       {
@@ -20,9 +21,17 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       ...seo({
-        title: "Record Scrobbler V2",
+        title: "Record Scrobbler",
         description:
-          "Record Scrobbler V2 is a web application that allows you to scrobble your vinyl collection to Last.fm.",
+          "Record Scrobbler is a web application that allows you to scrobble your vinyl collection to Last.fm.",
+        keywords: [
+          "Record Scrobbler",
+          "Last.fm",
+          "Discogs",
+          "Scrobble",
+          "Vinyl",
+          "Scrobble Record",
+        ].join(", "),
       }),
     ],
     links: [
@@ -42,17 +51,21 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+  let { locale, direction } = useLocale();
+
   return (
-    <html lang="en">
+    <html lang={locale} dir={direction}>
       <head>
         <HeadContent />
       </head>
       <body>
-        <div className="min-h-screen bg-gray-100">
-          <Header />
+        <I18nProvider locale={locale}>
+          <div className="min-h-screen bg-gray-100">
+            <Header />
 
-          {children}
-        </div>
+            {children}
+          </div>
+        </I18nProvider>
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools buttonPosition="bottom-left" />
         <Scripts />

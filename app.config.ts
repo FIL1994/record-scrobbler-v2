@@ -1,5 +1,6 @@
 import { defineConfig } from "@tanstack/react-start/config";
 import tsConfigPaths from "vite-tsconfig-paths";
+import localesPlugin from "@react-aria/optimize-locales-plugin";
 
 export default defineConfig({
   tsr: {
@@ -14,6 +15,7 @@ export default defineConfig({
   },
   vite: {
     plugins: [
+      { ...localesPlugin.vite({ locales: [] }), enforce: "pre" },
       tsConfigPaths({
         projects: ["./tsconfig.json"],
       }) as any,

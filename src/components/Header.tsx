@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Disc3, Music } from "lucide-react";
 import { lastfmUserInfoOptions } from "~/utils/queries";
 import { isBrowser } from "~/utils/common";
+import { Link, useMatchRoute } from "@tanstack/react-router";
 
 function getLastfmUrl() {
   let url = `http://www.last.fm/api/auth/?api_key=${import.meta.env.VITE_LASTFM_API_KEY}`;
@@ -12,18 +13,44 @@ function getLastfmUrl() {
   return url;
 }
 
+const navLinks = [
+  { path: "/", label: "View Collection" },
+  { path: "/scrobble", label: "Scrobble Song" },
+] as const;
+
 export function Header() {
   const { data: userInfo } = useQuery(lastfmUserInfoOptions());
+  const matchRoute = useMatchRoute();
 
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Disc3 className="text-red-600" size={24} />
-            <h1 className="text-xl font-bold text-gray-900">
-              Record Scrobbler V2
-            </h1>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Disc3 className="text-red-600" size={24} />
+              <h1 className="text-xl font-bold text-gray-900">
+                Record Scrobbler
+              </h1>
+            </div>
+
+            <nav className="flex items-center space-x-4">
+              {navLinks.map((link) => {
+                const isActive = matchRoute({
+                  to: link.path,
+                  fuzzy: link.path === "/",
+                });
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? "bg-gray-100 text-gray-900" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"}`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
           {userInfo ? (
             <a

@@ -32,3 +32,4 @@ dist-ssr
 # Tanstack Build Files
 .output
 .vinxi
+.netlify

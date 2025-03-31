@@ -1,6 +1,7 @@
 Libraries
 - use bun for installing dependencies and running tasks
 - use tailwind for styling
+- use lucide-react for icons
 
 Code Style
 - Prefer named exports over default exports
@@ -8,6 +9,7 @@ Code Style
 - Use camelCase
 - Use PascalCase for component names and enums
 - Prefer tailwind clases over inline styles
+- Use the LocalStorageKeys enum for localStorage keys
 
 Formatting
 - Use consistent Tailwind class ordering 

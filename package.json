@@ -26,12 +26,16 @@
     "arktype": "^2.1.15",
     "lucide-react": "^0.485.0",
     "react": "^19.1.0",
+    "react-aria-components": "^1.7.1",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.0.2",
+    "tailwind-variants": "^1.0.0",
+    "tailwindcss-animate": "^1.0.7",
     "unenv": "^1.10.0",
     "vinxi": "^0.5.3"
   },
   "devDependencies": {
+    "@react-aria/optimize-locales-plugin": "^1.1.4",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
