@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import { scrobbleTracks } from "~/services/lastfm";
 import { LocalStorageKeys } from "~/utils/localStorageKeys";
 import { seo } from "~/utils/seo";
 import { ScrobbleForm } from "~/components/scrobble/ScrobbleForm";
-import { ScrobbleHistory } from "~/components/scrobble/ScrobbleHistory";
+import { ScrobbleHistoryItem } from "~/components/scrobble/ScrobbleHistoryItem";
 import type { ScrobbleFormData } from "~/components/scrobble/ScrobbleForm";
 
 export const Route = createFileRoute("/scrobble")({
@@ -34,7 +35,7 @@ function RouteComponent() {
     text: string;
     type: "success" | "error";
   } | null>(null);
-  const { scrobbleHistory, addToHistory, removeFromHistory } =
+  const { scrobbleHistory, addToHistory, removeFromHistory, isLoading } =
     useScrobbleHistory();
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -145,11 +146,28 @@ function RouteComponent() {
           onSubmit={handleSubmit}
         />
 
-        <ScrobbleHistory
-          items={scrobbleHistory}
-          onItemClick={handleHistoryItemClick}
-          onItemDelete={handleHistoryItemDelete}
-        />
+        <div className="flex-1 mt-8 md:mt-0">
+          <h2 className="text-xl font-semibold mb-4">Recent Scrobbles</h2>
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
+              <p className="mt-2 text-gray-500">Loading history...</p>
+            </div>
+          ) : scrobbleHistory.length === 0 ? (
+            <p className="text-gray-500">No scrobble history yet</p>
+          ) : (
+            <ul className="space-y-2 max-h-[500px] overflow-y-auto">
+              {scrobbleHistory.map((item) => (
+                <ScrobbleHistoryItem
+                  key={item.id}
+                  {...item}
+                  onClick={() => handleHistoryItemClick(item)}
+                  onDelete={handleHistoryItemDelete}
+                />
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -159,8 +177,10 @@ function useScrobbleHistory() {
   const [scrobbleHistory, setScrobbleHistory] = useState<ScrobbleHistoryItem[]>(
     []
   );
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     const savedHistory = localStorage.getItem(LocalStorageKeys.ScrobbleHistory);
     if (savedHistory) {
       try {
@@ -170,6 +190,7 @@ function useScrobbleHistory() {
         console.error("Error parsing scrobble history:", error);
       }
     }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -198,5 +219,6 @@ function useScrobbleHistory() {
     scrobbleHistory,
     addToHistory,
     removeFromHistory,
+    isLoading,
   };
 }
