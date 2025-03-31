@@ -5,14 +5,12 @@ import { Loader2 } from "lucide-react";
 import { scrobbleTracks } from "~/services/lastfm";
 import { LocalStorageKeys } from "~/utils/localStorageKeys";
 import { seo } from "~/utils/seo";
-import {
-  compressData,
-  decompressData,
-  compareDataSizes,
-} from "~/utils/compression";
+import { compressData, decompressData } from "~/utils/compression";
 import { ScrobbleForm } from "~/components/scrobble/ScrobbleForm";
 import { ScrobbleHistoryItem } from "~/components/scrobble/ScrobbleHistoryItem";
 import type { ScrobbleFormData } from "~/components/scrobble/ScrobbleForm";
+
+const MAX_HISTORY_SIZE = 20;
 
 export const Route = createFileRoute("/scrobble")({
   component: RouteComponent,
@@ -238,7 +236,25 @@ function useScrobbleHistory() {
       timestamp: Date.now(),
     };
 
-    setScrobbleHistory((prev) => [newHistoryItem, ...prev.slice(0, 19)]);
+    setScrobbleHistory((prev) => {
+      // Check for duplicates (same artist and track)
+      const isDuplicate = (historyItem: ScrobbleHistoryItem) =>
+        historyItem.artist.toLowerCase() === item.artist.toLowerCase() &&
+        historyItem.track.toLowerCase() === item.track.toLowerCase() &&
+        historyItem.album?.toLowerCase() === item.album?.toLowerCase();
+
+      // Filter out any duplicates
+      const filteredHistory = prev.filter(
+        (historyItem) => !isDuplicate(historyItem)
+      );
+
+      // Add the new item at the top and limit to MAX_HISTORY_SIZE items
+      return [
+        newHistoryItem,
+        ...filteredHistory.slice(0, MAX_HISTORY_SIZE - 1),
+      ];
+    });
+
     return newHistoryItem;
   }
 
