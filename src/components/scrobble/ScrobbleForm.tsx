@@ -13,7 +13,7 @@ export interface ScrobbleFormProps {
   formData: ScrobbleFormData;
   isSubmitting: boolean;
   onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onSubmit: (e: React.FormEvent) => void;
 }
 
 export function ScrobbleForm({
