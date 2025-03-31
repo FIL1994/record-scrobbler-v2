@@ -5,6 +5,11 @@ import { Loader2 } from "lucide-react";
 import { scrobbleTracks } from "~/services/lastfm";
 import { LocalStorageKeys } from "~/utils/localStorageKeys";
 import { seo } from "~/utils/seo";
+import {
+  compressData,
+  decompressData,
+  compareDataSizes,
+} from "~/utils/compression";
 import { ScrobbleForm } from "~/components/scrobble/ScrobbleForm";
 import { ScrobbleHistoryItem } from "~/components/scrobble/ScrobbleHistoryItem";
 import type { ScrobbleFormData } from "~/components/scrobble/ScrobbleForm";
@@ -14,7 +19,7 @@ export const Route = createFileRoute("/scrobble")({
   head: (_ctx) => ({
     meta: [
       ...seo({
-        title: "Manual Scrobble - Record Scrobbler",
+        title: "Scrobble Song - Record Scrobbler",
       }),
     ],
   }),
@@ -180,24 +185,50 @@ function useScrobbleHistory() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
-    const savedHistory = localStorage.getItem(LocalStorageKeys.ScrobbleHistory);
-    if (savedHistory) {
+    async function loadHistory() {
+      setIsLoading(true);
       try {
-        const parsedHistory = JSON.parse(savedHistory) as ScrobbleHistoryItem[];
-        setScrobbleHistory(parsedHistory);
+        const compressedHistory = localStorage.getItem(
+          LocalStorageKeys.ScrobbleHistory
+        );
+
+        if (compressedHistory) {
+          const decompressedData = await decompressData(compressedHistory);
+          const historyData = JSON.parse(decompressedData);
+          setScrobbleHistory(historyData);
+        }
       } catch (error) {
-        console.error("Error parsing scrobble history:", error);
+        console.error("Error loading scrobble history:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
-    setIsLoading(false);
+
+    loadHistory();
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(
-      LocalStorageKeys.ScrobbleHistory,
-      JSON.stringify(scrobbleHistory)
-    );
+    async function saveHistory() {
+      if (scrobbleHistory.length > 0) {
+        try {
+          const historyString = JSON.stringify(scrobbleHistory);
+          const compressedData = await compressData(historyString);
+
+          // compareDataSizes(historyString, compressedData);
+
+          localStorage.setItem(
+            LocalStorageKeys.ScrobbleHistory,
+            compressedData
+          );
+        } catch (error) {
+          console.error("Error saving scrobble history:", error);
+        }
+      } else {
+        localStorage.removeItem(LocalStorageKeys.ScrobbleHistory);
+      }
+    }
+
+    saveHistory();
   }, [scrobbleHistory]);
 
   function addToHistory(item: Omit<ScrobbleHistoryItem, "id" | "timestamp">) {
