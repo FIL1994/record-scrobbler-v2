@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --view-transition-duration: 250ms;
+  --view-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 @layer base {
   html {
     color-scheme: light dark;
@@ -18,5 +23,241 @@
 
   .using-mouse * {
     outline: none !important;
+  }
+
+  /* CSS Reset - https://www.joshwcomeau.com/css/custom-css-reset/ */
+  /* 3. Enable keyword animations */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      interpolate-size: allow-keywords;
+    }
+  }
+
+  body {
+    /* 5. Improve text rendering */
+    -webkit-font-smoothing: antialiased;
+  }
+  /* 6. Improve media defaults */
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+  /* 7. Inherit fonts for form controls */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+  /* 8. Avoid text overflows */
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+  /* 9. Improve line wrapping */
+  p {
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+}
+
+/* @view-transition {
+  navigation: auto;
+} */
+
+/* Only apply animations if user hasn't requested reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  /* Slide Left Transition */
+  html:active-view-transition-type(slide-left) {
+    &::view-transition-old(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both slide-out-left;
+    }
+    &::view-transition-new(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both slide-in-left;
+    }
+  }
+
+  @keyframes slide-out-left {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes slide-in-left {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  /* Slide Right Transition */
+  html:active-view-transition-type(slide-right) {
+    &::view-transition-old(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both slide-out-right;
+    }
+    &::view-transition-new(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both slide-in-right;
+    }
+  }
+
+  @keyframes slide-out-right {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  /* Slide Up Transition */
+  html:active-view-transition-type(slide-up) {
+    &::view-transition-old(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both slide-out-up;
+    }
+    &::view-transition-new(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both slide-in-up;
+    }
+  }
+
+  @keyframes slide-out-up {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(-30px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide-in-up {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* Slide Down Transition */
+  html:active-view-transition-type(slide-down) {
+    &::view-transition-old(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both slide-out-down;
+    }
+    &::view-transition-new(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both slide-in-down;
+    }
+  }
+
+  @keyframes slide-out-down {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide-in-down {
+    from {
+      transform: translateY(-30px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* Flip Transition */
+  html:active-view-transition-type(flip) {
+    &::view-transition-old(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both flip-out;
+    }
+    &::view-transition-new(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both flip-in;
+    }
+  }
+
+  @keyframes flip-out {
+    from {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+    to {
+      transform: rotateY(90deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes flip-in {
+    from {
+      transform: rotateY(-90deg);
+      opacity: 0;
+    }
+    to {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+  }
+}
+
+/* For users who prefer reduced motion, provide instant transitions */
+@media (prefers-reduced-motion: reduce) {
+  html:active-view-transition-type(slide-right),
+  html:active-view-transition-type(slide-left),
+  html:active-view-transition-type(slide-up),
+  html:active-view-transition-type(slide-down),
+  html:active-view-transition-type(flip) {
+    &::view-transition-old(main-content),
+    &::view-transition-new(main-content),
+    &::view-transition-old(post),
+    &::view-transition-new(post) {
+      animation: none;
+    }
   }
 }

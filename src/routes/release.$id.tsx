@@ -1,19 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Share2 } from "lucide-react";
 import { useState } from "react";
+import { PageContainer } from "~/components/PageContainer";
 import { TrackTable } from "~/components/TrackTable";
+import type { RouterContext } from "~/router";
 import { scrobbleTracks } from "~/services/lastfm";
+import { normalizeArtistName } from "~/utils/common";
 import { getSessionToken } from "~/utils/getToken";
 import { discogsReleaseOptions } from "~/utils/queries";
+import { ViewTransitionType } from "~/utils/viewTransitions";
 
 export const Route = createFileRoute("/release/$id")({
   component: ReleaseComponent,
+  loader: ({ context, params: { id } }) => {
+    const { queryClient } = context as RouterContext;
+    queryClient.ensureQueryData(discogsReleaseOptions(Number(id)));
+  },
 });
 
 function ReleaseComponent() {
   const { id } = Route.useParams();
-  const { data: release } = useQuery(discogsReleaseOptions(Number(id)));
+  const { data: release } = useSuspenseQuery(discogsReleaseOptions(Number(id)));
   const [selectedTracks, setSelectedTracks] = useState<Set<string>>(new Set());
 
   if (!release) {
@@ -35,12 +43,12 @@ function ReleaseComponent() {
       (track: { position: string }) => selectedTracks.has(track.position)
     );
 
-    scrobbleTracks({
-      artist: release.artists[0].name,
-      token: lastfmToken,
-      album: release.title,
-      tracks: selectedTrackObjects.map((track) => track.title),
-    });
+    // scrobbleTracks({
+    //   artist: release.artists[0].name,
+    //   token: lastfmToken,
+    //   album: release.title,
+    //   tracks: selectedTrackObjects.map((track) => track.title),
+    // });
 
     try {
       await scrobbleTracks({
@@ -76,16 +84,19 @@ function ReleaseComponent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <PageContainer className="max-w-5xl">
       <Link
         to="/"
         className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
+        viewTransition={{
+          types: [ViewTransitionType.Flip],
+        }}
       >
         <ArrowLeft size={20} />
         Back to Collection
       </Link>
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden [view-transition-name:main-content]">
         <div className="p-6 flex gap-6">
           {coverImage && (
             <img
@@ -98,7 +109,9 @@ function ReleaseComponent() {
             <h1 className="text-2xl font-bold text-gray-900">
               {release.title}
             </h1>
-            <p className="text-lg text-gray-600">{release.artists[0].name}</p>
+            <p className="text-lg text-gray-600">
+              {normalizeArtistName(release.artists[0].name)}
+            </p>
             <p className="text-gray-500">{release.year}</p>
 
             <button
@@ -122,6 +135,6 @@ function ReleaseComponent() {
           />
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }

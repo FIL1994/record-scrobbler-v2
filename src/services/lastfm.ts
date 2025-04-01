@@ -1,4 +1,5 @@
 import type { LastfmUserInfoResponse } from "~/types";
+import { normalizeArtistName } from "~/utils/common";
 
 const LASTFM_API = "https://ws.audioscrobbler.com/2.0/";
 const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
@@ -41,8 +42,26 @@ export async function getSession(token: string) {
   return (await response.json()).session.key as string;
 }
 
+const FALLBACK_TRACK_DURATION = 180; // 3 minutes
+
 /**
- * Scrobble a track to Last.fm
+ * Parse duration string in format MM:SS to seconds
+ * @param duration Duration string in format MM:SS
+ */
+function parseDuration(duration: string): number {
+  if (!duration) return FALLBACK_TRACK_DURATION; // Default to 3 minutes if no duration
+
+  const parts = duration.split(":");
+  if (parts.length === 2) {
+    const minutes = parseInt(parts[0], 10);
+    const seconds = parseInt(parts[1], 10);
+    return minutes * 60 + seconds;
+  }
+  return FALLBACK_TRACK_DURATION; // Default to 3 minutes if parsing fails
+}
+
+/**
+ * Scrobble tracks to Last.fm
  * @see https://www.last.fm/api/show/track.scrobble
  */
 export async function scrobbleTracks({
@@ -51,15 +70,16 @@ export async function scrobbleTracks({
   token,
   album,
   cbUrl,
+  durations,
 }: {
   artist: string;
   tracks: string[];
   token: string;
   album?: string;
   cbUrl?: string;
+  durations?: string[];
 }) {
-  // UNIX timestamp. Seconds since epoch. Must be in UTC time zone
-  const timestamp = Math.floor(Date.now() / 1000);
+  const now = Math.floor(Date.now() / 1000);
 
   const params = new URLSearchParams({
     method: "track.scrobble",
@@ -67,10 +87,24 @@ export async function scrobbleTracks({
     sk: token,
   });
 
+  const timestamps: number[] = [];
+
+  // Work backwards from the last track
+  for (let i = tracks.length - 1; i >= 0; i--) {
+    if (i === tracks.length - 1) {
+      timestamps[i] = now;
+    } else {
+      const nextTrackDuration = durations?.[i + 1]
+        ? parseDuration(durations[i + 1])
+        : FALLBACK_TRACK_DURATION;
+      timestamps[i] = timestamps[i + 1] - nextTrackDuration;
+    }
+  }
+
   for (let i = 0; i < tracks.length; i++) {
-    params.set(`artist[${i}]`, artist);
+    params.set(`artist[${i}]`, normalizeArtistName(artist));
     params.set(`track[${i}]`, tracks[i]);
-    params.set(`timestamp[${i}]`, timestamp.toString());
+    params.set(`timestamp[${i}]`, timestamps[i].toString());
 
     if (album) {
       params.set(`album[${i}]`, album);

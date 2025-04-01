@@ -8,6 +8,7 @@ import {
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import appCss from "~/styles/app.css?url";
+import toastifyCss from "react-toastify/dist/ReactToastify.css?url";
 import { seo } from "~/utils/seo";
 import { Header } from "~/components/Header";
 import { I18nProvider, useLocale } from "react-aria-components";
@@ -36,6 +37,7 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "stylesheet", href: toastifyCss },
       { rel: "icon", href: "/favicon.png" },
     ],
   }),
@@ -60,7 +62,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body>
         <I18nProvider locale={locale}>
-          <div className="min-h-screen bg-gray-100">
+          <div className="flex flex-col min-h-screen bg-gray-100">
             <Header />
 
             {children}

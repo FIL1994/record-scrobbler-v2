@@ -3,6 +3,7 @@ import { getCollection, getReleaseInfo } from "~/services/discogs";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import { getUserInfo } from "~/services/lastfm";
 import { getSessionToken } from "./getToken";
+import { minutesToMilliseconds } from "date-fns";
 
 const queryKeyStore = createQueryKeyStore({
   discogs: {
@@ -35,6 +36,7 @@ export const discogsCollectionOptions = (username: string) => {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     staleTime: Infinity,
+    gcTime: Infinity,
   });
 };
 
@@ -49,6 +51,7 @@ export const discogsReleaseOptions = (releaseId: number) => {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     staleTime: Infinity,
+    gcTime: minutesToMilliseconds(30),
   });
 };
 
