@@ -15,8 +15,10 @@ export const Route = createFileRoute("/release/$id")({
   component: ReleaseComponent,
   loader: ({ context, params: { id } }) => {
     const { queryClient } = context as RouterContext;
-    queryClient.ensureQueryData(discogsReleaseOptions(Number(id)));
+    // return queryClient.ensureQueryData(discogsReleaseOptions(Number(id)));
+    return queryClient.prefetchQuery(discogsReleaseOptions(Number(id)));
   },
+  ssr: false,
 });
 
 function ReleaseComponent() {
@@ -26,7 +28,7 @@ function ReleaseComponent() {
 
   if (!release) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-gray-500">Loading...</div>
       </div>
     );
@@ -42,13 +44,6 @@ function ReleaseComponent() {
     const selectedTrackObjects = release.tracklist.filter(
       (track: { position: string }) => selectedTracks.has(track.position)
     );
-
-    // scrobbleTracks({
-    //   artist: release.artists[0].name,
-    //   token: lastfmToken,
-    //   album: release.title,
-    //   tracks: selectedTrackObjects.map((track) => track.title),
-    // });
 
     try {
       await scrobbleTracks({
@@ -109,9 +104,14 @@ function ReleaseComponent() {
             <h1 className="text-2xl font-bold text-gray-900">
               {release.title}
             </h1>
-            <p className="text-lg text-gray-600">
+            <Link
+              to="/artist/$id"
+              params={{ id: release.artists[0].id.toString() }}
+              className="text-lg text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+              viewTransition
+            >
               {normalizeArtistName(release.artists[0].name)}
-            </p>
+            </Link>
             <p className="text-gray-500">{release.year}</p>
 
             <button

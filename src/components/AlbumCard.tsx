@@ -9,21 +9,32 @@ interface AlbumCardProps {
   album: Album;
   onScrobble: (album: Album) => void;
   isScrobbling?: boolean;
+  showArtistLink?: boolean;
 }
 
 export function AlbumCard({
   album,
   onScrobble,
   isScrobbling = false,
+  showArtistLink = false,
 }: AlbumCardProps) {
+  const artistName = normalizeArtistName(album.artist);
+  const artistId = album.artistId?.toString();
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-800 dark:bg-gray-900">
       <div className="relative">
-        <img
-          src={album.coverImage}
-          alt={`${album.title} cover`}
-          className="w-full h-48 object-cover"
-        />
+        {album.coverImage ? (
+          <img
+            src={album.coverImage}
+            alt={`${album.title} cover`}
+            className="w-full h-48 object-cover"
+          />
+        ) : (
+          <div className="w-full h-48 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+            <Disc className="h-20 w-20 text-gray-400 dark:text-gray-600" />
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-35 transition-opacity duration-300"></div>
       </div>
 
@@ -32,12 +43,27 @@ export function AlbumCard({
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
             {album.title}
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            {normalizeArtistName(album.artist)}
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-            {album.year}
-          </p>
+          {showArtistLink && artistId ? (
+            <Link
+              to="/artist/$id"
+              params={{ id: artistId }}
+              className="text-gray-600 dark:text-gray-400 mt-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              viewTransition={{
+                types: [ViewTransitionType.SlideUp],
+              }}
+            >
+              {artistName}
+            </Link>
+          ) : (
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
+              {artistName}
+            </p>
+          )}
+          {!!album.year && (
+            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+              {album.year}
+            </p>
+          )}
         </div>
 
         <div className="mt-4 flex gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">

@@ -148,6 +148,7 @@ function Home() {
             name={FormNames.Username}
             autoComplete="on"
             defaultValue={savedUsername}
+            aria-label="Enter your Discogs username"
             placeholder="Enter your Discogs username"
             className="flex-1 max-w-xs px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
           />
@@ -170,6 +171,7 @@ function Home() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search by title, artist, or year..."
               placeholder="Search by title, artist, or year..."
               className="pl-10 w-full max-w-md px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             />
@@ -184,6 +186,7 @@ function Home() {
             album={album}
             onScrobble={handleScrobble}
             isScrobbling={Boolean(scrobblingAlbums[album.id])}
+            showArtistLink
           />
         ))}
       </div>

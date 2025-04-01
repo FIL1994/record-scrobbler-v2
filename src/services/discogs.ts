@@ -1,4 +1,9 @@
-import type { DiscogsRelease, DiscogsReleaseResponse } from "~/types";
+import type {
+  DiscogsRelease,
+  DiscogsReleaseResponse,
+  DiscogsArtistResponse,
+  DiscogsArtistRelease,
+} from "~/types";
 
 const DISCOGS_API = "https://api.discogs.com";
 
@@ -77,4 +82,41 @@ export async function getReleaseInfo(releaseId: number) {
   }
 
   return (await response.json()) as DiscogsReleaseResponse;
+}
+
+/**
+ * Get information about an artist and their releases
+ * @see https://www.discogs.com/developers#page:database,header:database-artist
+ */
+export async function getArtistInfo(artistId: number) {
+  const token = import.meta.env.VITE_DISCOGS_TOKEN || "";
+
+  const response = await fetch(
+    `${DISCOGS_API}/artists/${artistId}?token=${token}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch artist information");
+  }
+
+  return (await response.json()) as DiscogsArtistResponse;
+}
+
+/**
+ * Get the releases (albums) by an artist
+ * @see https://www.discogs.com/developers#page:database,header:database-artist-releases
+ */
+export async function getArtistReleases(artistId: number) {
+  const token = import.meta.env.VITE_DISCOGS_TOKEN || "";
+
+  const response = await fetch(
+    `${DISCOGS_API}/artists/${artistId}/releases?token=${token}&sort=year&sort_order=desc&page=1&per_page=20`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch artist releases");
+  }
+
+  const data = await response.json();
+  return data.releases as DiscogsArtistRelease[];
 }

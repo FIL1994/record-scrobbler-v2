@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as ScrobbleImport } from './routes/scrobble'
 import { Route as IndexImport } from './routes/index'
 import { Route as ReleaseIdImport } from './routes/release.$id'
+import { Route as ArtistIdImport } from './routes/artist.$id'
 import { Route as AuthLastfmCallbackImport } from './routes/auth.lastfm.callback'
 import { Route as AuthDiscogsCallbackImport } from './routes/auth.discogs.callback'
 
@@ -34,6 +35,12 @@ const IndexRoute = IndexImport.update({
 const ReleaseIdRoute = ReleaseIdImport.update({
   id: '/release/$id',
   path: '/release/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ArtistIdRoute = ArtistIdImport.update({
+  id: '/artist/$id',
+  path: '/artist/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -67,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScrobbleImport
       parentRoute: typeof rootRoute
     }
+    '/artist/$id': {
+      id: '/artist/$id'
+      path: '/artist/$id'
+      fullPath: '/artist/$id'
+      preLoaderRoute: typeof ArtistIdImport
+      parentRoute: typeof rootRoute
+    }
     '/release/$id': {
       id: '/release/$id'
       path: '/release/$id'
@@ -96,6 +110,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/scrobble': typeof ScrobbleRoute
+  '/artist/$id': typeof ArtistIdRoute
   '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
   '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
@@ -104,6 +119,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/scrobble': typeof ScrobbleRoute
+  '/artist/$id': typeof ArtistIdRoute
   '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
   '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
@@ -113,6 +129,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/scrobble': typeof ScrobbleRoute
+  '/artist/$id': typeof ArtistIdRoute
   '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
   '/auth/lastfm/callback': typeof AuthLastfmCallbackRoute
@@ -123,6 +140,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/scrobble'
+    | '/artist/$id'
     | '/release/$id'
     | '/auth/discogs/callback'
     | '/auth/lastfm/callback'
@@ -130,6 +148,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/scrobble'
+    | '/artist/$id'
     | '/release/$id'
     | '/auth/discogs/callback'
     | '/auth/lastfm/callback'
@@ -137,6 +156,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/scrobble'
+    | '/artist/$id'
     | '/release/$id'
     | '/auth/discogs/callback'
     | '/auth/lastfm/callback'
@@ -146,6 +166,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ScrobbleRoute: typeof ScrobbleRoute
+  ArtistIdRoute: typeof ArtistIdRoute
   ReleaseIdRoute: typeof ReleaseIdRoute
   AuthDiscogsCallbackRoute: typeof AuthDiscogsCallbackRoute
   AuthLastfmCallbackRoute: typeof AuthLastfmCallbackRoute
@@ -154,6 +175,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ScrobbleRoute: ScrobbleRoute,
+  ArtistIdRoute: ArtistIdRoute,
   ReleaseIdRoute: ReleaseIdRoute,
   AuthDiscogsCallbackRoute: AuthDiscogsCallbackRoute,
   AuthLastfmCallbackRoute: AuthLastfmCallbackRoute,
@@ -171,6 +193,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/scrobble",
+        "/artist/$id",
         "/release/$id",
         "/auth/discogs/callback",
         "/auth/lastfm/callback"
@@ -181,6 +204,9 @@ export const routeTree = rootRoute
     },
     "/scrobble": {
       "filePath": "scrobble.tsx"
+    },
+    "/artist/$id": {
+      "filePath": "artist.$id.tsx"
     },
     "/release/$id": {
       "filePath": "release.$id.tsx"
