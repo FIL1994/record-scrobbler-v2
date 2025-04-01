@@ -16,6 +16,8 @@ function getLastfmUrl() {
 
 const navLinks = [
   { path: "/", label: "View Collection" },
+  // TODO - add this page
+  { path: "/search-album" as string, label: "Album Search" },
   { path: "/scrobble", label: "Scrobble Song" },
 ] as const;
 
@@ -49,7 +51,7 @@ export function Header({
               </h1>
             </div>
 
-            <nav className="flex items-center space-x-4">
+            <nav className="flex items-center space-x-2">
               {navLinks.map((link) => {
                 const isActive = matchRoute({
                   to: link.path,
