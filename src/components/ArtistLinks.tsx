@@ -12,6 +12,7 @@ import {
   SiMyspace,
   SiLinktree,
   SiImdb,
+  SiTumblr,
 } from "@icons-pack/react-simple-icons";
 
 interface ArtistLinksProps {
@@ -54,6 +55,8 @@ export function ArtistLinks({ urls }: ArtistLinksProps) {
         return { url, icon: <SiDiscogs size={16} />, name: "Discogs" };
       } else if (hostname.includes("wikipedia.org")) {
         return { url, icon: <SiWikipedia size={16} />, name: "Wikipedia" };
+      } else if (hostname.includes("tumblr.com")) {
+        return { url, icon: <SiTumblr size={16} />, name: "Tumblr" };
       } else if (hostname.includes("myspace.com")) {
         return { url, icon: <SiMyspace size={16} />, name: "Myspace" };
       } else if (hostname.includes("imdb.com")) {
