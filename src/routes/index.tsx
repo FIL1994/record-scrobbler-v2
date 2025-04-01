@@ -1,8 +1,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { type } from "arktype";
-import { Loader2, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { AlbumCard } from "~/components/AlbumCard";
 import { PageContainer } from "~/components/PageContainer";
 import { useLocalStorage } from "~/hooks/useLocalStorage";
@@ -91,10 +92,27 @@ function Home() {
         durations: trackDurations,
       });
 
-      console.log(
-        `Successfully scrobbled ${trackTitles.length} tracks to Last.fm!`
+      toast.success(
+        `Successfully scrobbled ${trackTitles.length} tracks from ${album.title}!`,
+        {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
       );
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      toast.error(`Failed to scrobble: ${errorMessage}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       console.error("Failed to scrobble tracks. Please try again.", err);
     } finally {
       // Remove this album from the scrobbling state regardless of success/failure

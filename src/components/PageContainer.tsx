@@ -1,4 +1,5 @@
 import { twMerge } from "tailwind-merge";
+import { ToastContainer } from "react-toastify";
 
 export function PageContainer({
   children,
@@ -12,6 +13,7 @@ export function PageContainer({
       )}
     >
       {children}
+      <ToastContainer />
     </main>
   );
 }
