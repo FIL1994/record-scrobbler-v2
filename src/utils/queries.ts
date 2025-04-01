@@ -35,6 +35,7 @@ export const discogsCollectionOptions = (username: string) => {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     staleTime: Infinity,
+    gcTime: Infinity,
   });
 };
 

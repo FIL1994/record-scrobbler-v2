@@ -2,6 +2,7 @@ import { Share2, Disc } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { Album } from "../types";
 import { Button } from "./starter-kit/Button";
+import { normalizeArtistName } from "../utils/common";
 
 interface AlbumCardProps {
   album: Album;
@@ -19,16 +20,22 @@ export function AlbumCard({ album, onScrobble }: AlbumCardProps) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-35 transition-opacity duration-300"></div>
       </div>
-      
+
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">{album.title}</h3>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">{album.artist}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">{album.year}</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
+            {album.title}
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">
+            {normalizeArtistName(album.artist)}
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+            {album.year}
+          </p>
         </div>
 
         <div className="mt-4 flex gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
-          <Button 
+          <Button
             variant="destructive"
             onPress={() => onScrobble(album)}
             className="flex-1 flex items-center justify-center gap-2 min-h-[40px] py-0"

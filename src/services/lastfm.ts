@@ -1,4 +1,5 @@
 import type { LastfmUserInfoResponse } from "~/types";
+import { normalizeArtistName } from "~/utils/common";
 
 const LASTFM_API = "https://ws.audioscrobbler.com/2.0/";
 const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
@@ -68,7 +69,7 @@ export async function scrobbleTracks({
   });
 
   for (let i = 0; i < tracks.length; i++) {
-    params.set(`artist[${i}]`, artist);
+    params.set(`artist[${i}]`, normalizeArtistName(artist));
     params.set(`track[${i}]`, tracks[i]);
     params.set(`timestamp[${i}]`, timestamp.toString());
 

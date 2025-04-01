@@ -2,8 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Share2 } from "lucide-react";
 import { useState } from "react";
+import { PageContainer } from "~/components/PageContainer";
 import { TrackTable } from "~/components/TrackTable";
 import { scrobbleTracks } from "~/services/lastfm";
+import { normalizeArtistName } from "~/utils/common";
 import { getSessionToken } from "~/utils/getToken";
 import { discogsReleaseOptions } from "~/utils/queries";
 
@@ -35,12 +37,12 @@ function ReleaseComponent() {
       (track: { position: string }) => selectedTracks.has(track.position)
     );
 
-    scrobbleTracks({
-      artist: release.artists[0].name,
-      token: lastfmToken,
-      album: release.title,
-      tracks: selectedTrackObjects.map((track) => track.title),
-    });
+    // scrobbleTracks({
+    //   artist: release.artists[0].name,
+    //   token: lastfmToken,
+    //   album: release.title,
+    //   tracks: selectedTrackObjects.map((track) => track.title),
+    // });
 
     try {
       await scrobbleTracks({
@@ -76,7 +78,7 @@ function ReleaseComponent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <PageContainer className="max-w-5xl">
       <Link
         to="/"
         className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
@@ -98,7 +100,9 @@ function ReleaseComponent() {
             <h1 className="text-2xl font-bold text-gray-900">
               {release.title}
             </h1>
-            <p className="text-lg text-gray-600">{release.artists[0].name}</p>
+            <p className="text-lg text-gray-600">
+              {normalizeArtistName(release.artists[0].name)}
+            </p>
             <p className="text-gray-500">{release.year}</p>
 
             <button
@@ -122,6 +126,6 @@ function ReleaseComponent() {
           />
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }

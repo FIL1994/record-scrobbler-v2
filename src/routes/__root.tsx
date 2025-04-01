@@ -10,6 +10,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 import { Header } from "~/components/Header";
+import { NotFound } from "~/components/NotFound";
 import { I18nProvider, useLocale } from "react-aria-components";
 
 export const Route = createRootRoute({
@@ -40,6 +41,7 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootComponent,
+  notFoundComponent: NotFound,
 });
 
 function RootComponent() {
@@ -60,7 +62,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body>
         <I18nProvider locale={locale}>
-          <div className="min-h-screen bg-gray-100">
+          <div className="flex flex-col min-h-screen bg-gray-100">
             <Header />
 
             {children}

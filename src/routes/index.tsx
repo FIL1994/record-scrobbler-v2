@@ -4,6 +4,7 @@ import { type } from "arktype";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
+import { PageContainer } from "~/components/PageContainer";
 import { useLocalStorage } from "~/hooks/useLocalStorage";
 import { scrobbleTracks } from "~/services/lastfm";
 import type { Album } from "~/types";
@@ -75,7 +76,7 @@ function Home() {
   });
 
   return (
-    <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <PageContainer>
       <div className="mb-8 space-y-4">
         <form
           className="flex gap-4"
@@ -139,6 +140,6 @@ function Home() {
           No albums found matching your search
         </div>
       )}
-    </main>
+    </PageContainer>
   );
 }

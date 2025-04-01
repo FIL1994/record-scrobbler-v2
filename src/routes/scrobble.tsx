@@ -9,6 +9,7 @@ import { compressData, decompressData } from "~/utils/compression";
 import { ScrobbleForm } from "~/components/scrobble/ScrobbleForm";
 import { ScrobbleHistoryItem } from "~/components/scrobble/ScrobbleHistoryItem";
 import type { ScrobbleFormData } from "~/components/scrobble/ScrobbleForm";
+import { PageContainer } from "~/components/PageContainer";
 
 const MAX_HISTORY_SIZE = 20;
 
@@ -128,7 +129,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <PageContainer>
       <h1 className="text-2xl font-bold mb-6">Manually Scrobble a Track</h1>
 
       {message && (
@@ -172,7 +173,7 @@ function RouteComponent() {
           )}
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }
 
