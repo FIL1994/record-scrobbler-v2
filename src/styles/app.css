@@ -210,6 +210,40 @@
       opacity: 1;
     }
   }
+
+  /* Flip Transition */
+  html:active-view-transition-type(flip) {
+    &::view-transition-old(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both flip-out;
+    }
+    &::view-transition-new(main-content) {
+      animation: var(--view-transition-duration) var(--view-transition-easing)
+        both flip-in;
+    }
+  }
+
+  @keyframes flip-out {
+    from {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+    to {
+      transform: rotateY(90deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes flip-in {
+    from {
+      transform: rotateY(-90deg);
+      opacity: 0;
+    }
+    to {
+      transform: rotateY(0deg);
+      opacity: 1;
+    }
+  }
 }
 
 /* For users who prefer reduced motion, provide instant transitions */
@@ -217,7 +251,8 @@
   html:active-view-transition-type(slide-right),
   html:active-view-transition-type(slide-left),
   html:active-view-transition-type(slide-up),
-  html:active-view-transition-type(slide-down) {
+  html:active-view-transition-type(slide-down),
+  html:active-view-transition-type(flip) {
     &::view-transition-old(main-content),
     &::view-transition-new(main-content),
     &::view-transition-old(post),

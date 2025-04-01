@@ -89,7 +89,7 @@ function ReleaseComponent() {
         to="/"
         className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
         viewTransition={{
-          types: [ViewTransitionType.SlideDown],
+          types: [ViewTransitionType.Flip],
         }}
       >
         <ArrowLeft size={20} />

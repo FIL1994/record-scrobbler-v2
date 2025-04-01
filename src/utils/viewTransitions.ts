@@ -9,4 +9,5 @@ export enum ViewTransitionType {
   SlideDown = "slide-down",
   SlideLeft = "slide-left",
   SlideRight = "slide-right",
+  Flip = "flip",
 }
