@@ -48,6 +48,9 @@ export function AlbumCard({ album, onScrobble }: AlbumCardProps) {
             to="/release/$id"
             params={{ id: album.id.toString() }}
             className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 min-h-[40px]"
+            viewTransition={{
+              types: ["slide-right"],
+            }}
           >
             <Disc size={16} />
             <span>Tracks</span>

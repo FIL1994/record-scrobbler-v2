@@ -92,7 +92,7 @@ function ReleaseComponent() {
         Back to Collection
       </Link>
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden [view-transition-name:main-content]">
         <div className="p-6 flex gap-6">
           {coverImage && (
             <img
