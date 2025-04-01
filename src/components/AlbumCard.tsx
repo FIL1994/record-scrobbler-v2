@@ -9,13 +9,18 @@ interface AlbumCardProps {
   album: Album;
   onScrobble: (album: Album) => void;
   isScrobbling?: boolean;
+  showArtistLink?: boolean;
 }
 
 export function AlbumCard({
   album,
   onScrobble,
   isScrobbling = false,
+  showArtistLink = false,
 }: AlbumCardProps) {
+  const artistName = normalizeArtistName(album.artist);
+  const artistId = album.artistId?.toString();
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-800 dark:bg-gray-900">
       <div className="relative">
@@ -32,9 +37,22 @@ export function AlbumCard({
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
             {album.title}
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            {normalizeArtistName(album.artist)}
-          </p>
+          {showArtistLink && artistId ? (
+            <Link
+              to="/artist/$id"
+              params={{ id: artistId }}
+              className="text-gray-600 dark:text-gray-400 mt-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              viewTransition={{
+                types: [ViewTransitionType.SlideUp],
+              }}
+            >
+              {artistName}
+            </Link>
+          ) : (
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
+              {artistName}
+            </p>
+          )}
           <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
             {album.year}
           </p>

@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { Disc3, Music } from "lucide-react";
-import { lastfmUserInfoOptions } from "~/utils/queries";
-import { isBrowser } from "~/utils/common";
 import { Link, useMatchRoute } from "@tanstack/react-router";
+import { Disc3, Music } from "lucide-react";
+import { twMerge } from "tailwind-merge";
+import { isBrowser } from "~/utils/common";
+import { lastfmUserInfoOptions } from "~/utils/queries";
 
 function getLastfmUrl() {
   let url = `http://www.last.fm/api/auth/?api_key=${import.meta.env.VITE_LASTFM_API_KEY}`;
@@ -20,15 +21,23 @@ const navLinks = [
 
 interface HeaderProps {
   sticky?: boolean;
+  hasViewTransition?: boolean;
 }
 
-export function Header({ sticky = true }: HeaderProps) {
+export function Header({
+  sticky = true,
+  hasViewTransition = false,
+}: HeaderProps) {
   const { data: userInfo } = useQuery(lastfmUserInfoOptions());
   const matchRoute = useMatchRoute();
 
   return (
     <header
-      className={`bg-white shadow-sm ${sticky ? "sticky top-0 z-10" : ""} [view-transition-name:header] dark:bg-gray-900`}
+      className={twMerge(
+        "bg-white shadow-sm dark:bg-gray-900",
+        sticky && "sticky top-0 z-10",
+        hasViewTransition && "[view-transition-name:header]"
+      )}
     >
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">

@@ -6,6 +6,8 @@ export interface DiscogsRelease {
     master_id: number;
     artists: Array<{
       name: string;
+      id: number;
+      resource_url: string;
     }>;
     cover_image: string;
   };
@@ -15,6 +17,7 @@ export interface Album {
   id: number;
   title: string;
   artist: string;
+  artistId: number;
   year: number;
   coverImage: string;
 }
@@ -66,4 +69,37 @@ export interface LastfmUserInfoResponse {
     artist_count: string;
     playcount: string;
   };
+}
+
+export interface DiscogsArtistResponse {
+  id: number;
+  name: string;
+  profile: string;
+  urls: string[];
+  images: {
+    type: "primary" | "secondary";
+    uri: string;
+    uri150: string;
+    width: number;
+    height: number;
+  }[];
+  members?: Array<{
+    id: number;
+    name: string;
+    active: boolean;
+  }>;
+}
+
+export interface DiscogsArtistRelease {
+  id: number;
+  /** Only exists if type is master */
+  main_release?: number;
+  title: string;
+  year: number;
+  thumb: string;
+  resource_url: string;
+  type: "master" | "release";
+  role: "Main" | Omit<string, "Main">;
+  artist: string;
+  format: string;
 }

@@ -18,6 +18,8 @@ export function createRouter() {
     scrollRestoration: true,
     defaultErrorComponent: DefaultCatchBoundary,
     defaultNotFoundComponent: NotFound,
+    defaultViewTransition: true,
+    defaultStructuralSharing: true,
   });
 
   return routerWithQueryClient(router as any, queryClient) as typeof router;

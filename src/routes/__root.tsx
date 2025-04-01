@@ -24,7 +24,7 @@ export const Route = createRootRoute({
       ...seo({
         title: "Record Scrobbler",
         description:
-          "Record Scrobbler is a web application that allows you to scrobble your vinyl collection to Last.fm.",
+          "Record Scrobbler is a web application that allows you to scrobble your vinyl record collection to Last.fm. Import your collection from Discogs and start scrobbling.",
         keywords: [
           "Record Scrobbler",
           "Last.fm",
@@ -62,7 +62,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body>
         <I18nProvider locale={locale}>
-          <div className="flex flex-col min-h-screen bg-gray-100">
+          <div className="flex flex-col min-h-screen">
             <Header />
 
             {children}
