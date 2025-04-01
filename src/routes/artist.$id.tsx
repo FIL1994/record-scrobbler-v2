@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Share2, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { PageContainer } from "~/components/PageContainer";
 import { AlbumCard } from "~/components/AlbumCard";
@@ -62,6 +62,10 @@ function ArtistComponent() {
       // TODO - fetch the tracks for this album and scrobble them
       // For now, we'll just simulate it.
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      if (false) {
+        scrobbleTracks();
+      }
 
       toast.success(`Scrobbled ${album.title}`);
     } catch (err) {

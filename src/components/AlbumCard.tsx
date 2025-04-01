@@ -24,11 +24,17 @@ export function AlbumCard({
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-800 dark:bg-gray-900">
       <div className="relative">
-        <img
-          src={album.coverImage}
-          alt={`${album.title} cover`}
-          className="w-full h-48 object-cover"
-        />
+        {album.coverImage ? (
+          <img
+            src={album.coverImage}
+            alt={`${album.title} cover`}
+            className="w-full h-48 object-cover"
+          />
+        ) : (
+          <div className="w-full h-48 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+            <Disc className="h-20 w-20 text-gray-400 dark:text-gray-600" />
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-35 transition-opacity duration-300"></div>
       </div>
 
