@@ -9,6 +9,7 @@ import { scrobbleTracks } from "~/services/lastfm";
 import { normalizeArtistName } from "~/utils/common";
 import { getSessionToken } from "~/utils/getToken";
 import { discogsReleaseOptions } from "~/utils/queries";
+import { ViewTransitionType } from "~/utils/viewTransitions";
 
 export const Route = createFileRoute("/release/$id")({
   component: ReleaseComponent,
@@ -87,6 +88,9 @@ function ReleaseComponent() {
       <Link
         to="/"
         className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
+        viewTransition={{
+          types: [ViewTransitionType.SlideDown],
+        }}
       >
         <ArrowLeft size={20} />
         Back to Collection

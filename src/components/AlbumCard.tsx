@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import type { Album } from "../types";
 import { Button } from "./starter-kit/Button";
 import { normalizeArtistName } from "../utils/common";
+import { ViewTransitionType } from "~/utils/viewTransitions";
 
 interface AlbumCardProps {
   album: Album;
@@ -49,7 +50,7 @@ export function AlbumCard({ album, onScrobble }: AlbumCardProps) {
             params={{ id: album.id.toString() }}
             className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 min-h-[40px]"
             viewTransition={{
-              types: ["slide-right"],
+              types: [ViewTransitionType.SlideUp],
             }}
           >
             <Disc size={16} />
