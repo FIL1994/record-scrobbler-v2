@@ -1,6 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { Tooltip } from "~/components/starter-kit/Tooltip";
+import { TooltipTrigger } from "react-aria-components";
+import { ArtistTooltip } from "~/components/tooltips/ArtistTooltip";
+import { ReleaseTooltip } from "~/components/tooltips/ReleaseTooltip";
+import { useTooltipTriggerState } from "react-stately";
+import { mergeProps, useTooltip, useTooltipTrigger } from "react-aria";
 
 interface ArtistProfileProps {
   profile: string;
@@ -191,16 +197,7 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
         const isNumericId = /^Artist \d+$/.test(segment.content);
 
         if (isNumericId) {
-          return (
-            <Link
-              key={index}
-              to="/artist/$id"
-              params={{ id: segment.id || "0" }}
-              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-            >
-              {segment.content}
-            </Link>
-          );
+          return <ArtistLink id={segment.id!} content={segment.content} />;
         } else {
           return (
             <span
@@ -223,16 +220,7 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
         );
 
       case "release":
-        return (
-          <Link
-            key={index}
-            to="/release/$id"
-            params={{ id: segment.id || "0" }}
-            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-          >
-            [Release {segment.id}]
-          </Link>
-        );
+        return <ReleaseLink id={segment.id!} />;
 
       case "italic":
         return (
@@ -280,5 +268,64 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
         </button>
       )}
     </div>
+  );
+}
+
+function ReleaseLink({ id, ...props }: { id: string }) {
+  const state = useTooltipTriggerState(props);
+  const ref = useRef(null);
+  const { triggerProps, tooltipProps } = useTooltipTrigger(props, state, ref);
+
+  return (
+    <span className="relative">
+      <Link
+        ref={ref}
+        {...triggerProps}
+        to="/release/$id"
+        params={{ id: id || "0" }}
+        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+      >
+        Release {id}
+      </Link>
+
+      {state.isOpen && (
+        <span {...tooltipProps}>
+          <ReleaseTooltip releaseId={id} state={state} {...tooltipProps} />
+        </span>
+      )}
+    </span>
+  );
+}
+
+function ArtistLink({
+  id,
+  content,
+  ...props
+}: {
+  id: string;
+  content: string;
+}) {
+  const state = useTooltipTriggerState(props);
+  const ref = useRef(null);
+  const { triggerProps, tooltipProps } = useTooltipTrigger(props, state, ref);
+
+  return (
+    <span className="relative">
+      <Link
+        ref={ref}
+        {...triggerProps}
+        to="/artist/$id"
+        params={{ id: id || "0" }}
+        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+      >
+        {content}
+      </Link>
+
+      {state.isOpen && (
+        <span {...tooltipProps}>
+          <ArtistTooltip artistId={id} state={state} {...tooltipProps} />
+        </span>
+      )}
+    </span>
   );
 }
