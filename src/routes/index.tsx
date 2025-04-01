@@ -11,6 +11,7 @@ import type { Album } from "~/types";
 import { getSessionToken, getToken } from "~/utils/getToken";
 import { LocalStorageKeys } from "~/utils/localStorageKeys";
 import { discogsCollectionOptions } from "~/utils/queries";
+import { getReleaseInfo } from "~/services/discogs";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -54,15 +55,28 @@ function Home() {
     }
 
     try {
+      const releaseInfo = await getReleaseInfo(album.id);
+
+      const trackTitles = releaseInfo.tracklist
+        .filter((track) => track.type_ !== "heading")
+        .map((track) => track.title);
+
+      if (trackTitles.length === 0) {
+        throw new Error("No tracks found for this album");
+      }
+
       await scrobbleTracks({
         artist: album.artist,
-        tracks: [album.title],
+        tracks: trackTitles,
         album: album.title,
         token: lastfmToken,
       });
-      console.log("Successfully scrobbled to Last.fm!");
+
+      console.log(
+        `Successfully scrobbled ${trackTitles.length} tracks to Last.fm!`
+      );
     } catch (err) {
-      console.error("Failed to scrobble track. Please try again.", err);
+      console.error("Failed to scrobble tracks. Please try again.", err);
     }
   };
 
