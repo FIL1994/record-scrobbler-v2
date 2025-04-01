@@ -159,6 +159,16 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
           </span>
         );
 
+      case "label":
+        return (
+          <span
+            key={index}
+            className="font-medium text-gray-700 dark:text-gray-300"
+          >
+            {segment.content}
+          </span>
+        );
+
       case "release":
         return (
           <Link
@@ -169,16 +179,6 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
           >
             [Release {segment.id}]
           </Link>
-        );
-
-      case "label":
-        return (
-          <span
-            key={index}
-            className="font-medium text-gray-700 dark:text-gray-300"
-          >
-            {segment.content}
-          </span>
         );
 
       default:
