@@ -1,4 +1,4 @@
-import { Share2, Disc } from "lucide-react";
+import { Share2, Disc, Loader2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { Album } from "../types";
 import { Button } from "./starter-kit/Button";
@@ -8,9 +8,14 @@ import { ViewTransitionType } from "~/utils/viewTransitions";
 interface AlbumCardProps {
   album: Album;
   onScrobble: (album: Album) => void;
+  isScrobbling?: boolean;
 }
 
-export function AlbumCard({ album, onScrobble }: AlbumCardProps) {
+export function AlbumCard({
+  album,
+  onScrobble,
+  isScrobbling = false,
+}: AlbumCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-800 dark:bg-gray-900">
       <div className="relative">
@@ -40,9 +45,19 @@ export function AlbumCard({ album, onScrobble }: AlbumCardProps) {
             variant="destructive"
             onPress={() => onScrobble(album)}
             className="flex-1 flex items-center justify-center gap-2 min-h-[40px] py-0"
+            isDisabled={isScrobbling}
           >
-            <Share2 size={16} />
-            <span>Scrobble</span>
+            {isScrobbling ? (
+              <>
+                <Loader2 size={16} className="shrink-0 animate-spin" />
+                <span>Scrobbling...</span>
+              </>
+            ) : (
+              <>
+                <Share2 size={16} className="shrink-0" />
+                <span>Scrobble</span>
+              </>
+            )}
           </Button>
 
           <Link
@@ -53,7 +68,7 @@ export function AlbumCard({ album, onScrobble }: AlbumCardProps) {
               types: [ViewTransitionType.SlideUp],
             }}
           >
-            <Disc size={16} />
+            <Disc size={16} className="shrink-0" />
             <span>Tracks</span>
           </Link>
         </div>

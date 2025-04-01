@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { type } from "arktype";
-import { Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
 import { PageContainer } from "~/components/PageContainer";
@@ -11,7 +11,7 @@ import type { Album } from "~/types";
 import { getSessionToken, getToken } from "~/utils/getToken";
 import { LocalStorageKeys } from "~/utils/localStorageKeys";
 import { discogsCollectionOptions } from "~/utils/queries";
-import { getReleaseInfo } from "~/services/discogs";
+import { discogsReleaseOptions } from "~/utils/queries";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -25,12 +25,16 @@ enum FormNames {
 }
 
 function Home() {
+  const queryClient = useQueryClient();
   const { username } = Route.useSearch({});
   const [savedUsername, setSavedUsername] = useLocalStorage(
     LocalStorageKeys.Username,
     username || ""
   );
   const [searchQuery, setSearchQuery] = useState("");
+  const [scrobblingAlbums, setScrobblingAlbums] = useState<
+    Record<number, boolean>
+  >({});
 
   useEffect(() => {
     getToken();
@@ -54,12 +58,24 @@ function Home() {
       throw new Error("No Last.fm token found");
     }
 
-    try {
-      const releaseInfo = await getReleaseInfo(album.id);
+    // Set this album as currently scrobbling
+    setScrobblingAlbums((prev) => ({
+      ...prev,
+      [album.id]: true,
+    }));
 
-      const filteredTracks = releaseInfo.tracklist
-        .filter((track) => track.type_ !== "heading");
-        
+    try {
+      const releaseQueryOptions = discogsReleaseOptions(album.id);
+
+      let releaseInfo = queryClient.getQueryData(releaseQueryOptions.queryKey);
+      if (!releaseInfo) {
+        releaseInfo = await queryClient.fetchQuery(releaseQueryOptions);
+      }
+
+      const filteredTracks = releaseInfo.tracklist.filter(
+        (track) => track.type_ !== "heading"
+      );
+
       const trackTitles = filteredTracks.map((track) => track.title);
       const trackDurations = filteredTracks.map((track) => track.duration);
 
@@ -80,6 +96,13 @@ function Home() {
       );
     } catch (err) {
       console.error("Failed to scrobble tracks. Please try again.", err);
+    } finally {
+      // Remove this album from the scrobbling state regardless of success/failure
+      setScrobblingAlbums((prev) => {
+        const updated = { ...prev };
+        delete updated[album.id];
+        return updated;
+      });
     }
   };
 
@@ -142,6 +165,7 @@ function Home() {
             key={`${album.title}-${index}`}
             album={album}
             onScrobble={handleScrobble}
+            isScrobbling={Boolean(scrobblingAlbums[album.id])}
           />
         ))}
       </div>
