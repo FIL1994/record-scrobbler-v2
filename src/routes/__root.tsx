@@ -10,7 +10,6 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 import { Header } from "~/components/Header";
-import { NotFound } from "~/components/NotFound";
 import { I18nProvider, useLocale } from "react-aria-components";
 
 export const Route = createRootRoute({
@@ -41,7 +40,6 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootComponent,
-  notFoundComponent: NotFound,
 });
 
 function RootComponent() {

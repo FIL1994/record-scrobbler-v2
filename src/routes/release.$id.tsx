@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Share2 } from "lucide-react";
 import { useState } from "react";
 import { PageContainer } from "~/components/PageContainer";
 import { TrackTable } from "~/components/TrackTable";
+import type { RouterContext } from "~/router";
 import { scrobbleTracks } from "~/services/lastfm";
 import { normalizeArtistName } from "~/utils/common";
 import { getSessionToken } from "~/utils/getToken";
@@ -11,11 +12,15 @@ import { discogsReleaseOptions } from "~/utils/queries";
 
 export const Route = createFileRoute("/release/$id")({
   component: ReleaseComponent,
+  loader: ({ context, params: { id } }) => {
+    const { queryClient } = context as RouterContext;
+    queryClient.ensureQueryData(discogsReleaseOptions(Number(id)));
+  },
 });
 
 function ReleaseComponent() {
   const { id } = Route.useParams();
-  const { data: release } = useQuery(discogsReleaseOptions(Number(id)));
+  const { data: release } = useSuspenseQuery(discogsReleaseOptions(Number(id)));
   const [selectedTracks, setSelectedTracks] = useState<Set<string>>(new Set());
 
   if (!release) {
