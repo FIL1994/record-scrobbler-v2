@@ -18,12 +18,18 @@ const navLinks = [
   { path: "/scrobble", label: "Scrobble Song" },
 ] as const;
 
-export function Header() {
+interface HeaderProps {
+  sticky?: boolean;
+}
+
+export function Header({ sticky = true }: HeaderProps) {
   const { data: userInfo } = useQuery(lastfmUserInfoOptions());
   const matchRoute = useMatchRoute();
 
   return (
-    <header className="bg-white shadow-sm [view-transition-name:header]">
+    <header
+      className={`bg-white shadow-sm ${sticky ? "sticky top-0 z-10" : ""} [view-transition-name:header] dark:bg-gray-900`}
+    >
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
