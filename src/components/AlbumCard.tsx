@@ -53,9 +53,11 @@ export function AlbumCard({
               {artistName}
             </p>
           )}
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-            {album.year}
-          </p>
+          {!!album.year && (
+            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+              {album.year}
+            </p>
+          )}
         </div>
 
         <div className="mt-4 flex gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">

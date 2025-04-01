@@ -9,7 +9,7 @@ interface ArtistProfileProps {
 const MAX_LENGTH = 320;
 
 interface ParsedSegment {
-  type: "text" | "url" | "artist" | "release" | "label";
+  type: "text" | "url" | "artist" | "release" | "label" | "italic" | "timespan";
   content: string;
   url?: string;
   id?: string;
@@ -35,12 +35,15 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
     // Regular expressions for different patterns
     const urlPattern = /\[url=([^\]]+)\]([^\[]+)\[\/url\]/g;
     const artistPattern = /\[a=([^\]]+)\]/g;
+    const artistIdPattern = /\[a(\d+)\]/g;
     const releasePattern = /\[r=([^\]]+)\]/g;
     const labelPattern = /\[l=([^\]]+)\]/g;
+    const italicPattern = /\[i\]([^\[]+)\[\/i\]/g;
+    const timespanPattern = /\[u\]([^\[]+)\[\/u\]/g;
 
     // Find all matches and their positions
     const matches: Array<{
-      type: "url" | "artist" | "release" | "label";
+      type: "url" | "artist" | "release" | "label" | "italic" | "timespan";
       start: number;
       end: number;
       content: string;
@@ -72,6 +75,18 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
       });
     }
 
+    // Find artist ID matches [a123456]
+    let artistIdMatch;
+    while ((artistIdMatch = artistIdPattern.exec(text)) !== null) {
+      matches.push({
+        type: "artist",
+        start: artistIdMatch.index,
+        end: artistIdMatch.index + artistIdMatch[0].length,
+        content: `Artist ${artistIdMatch[1]}`,
+        id: artistIdMatch[1],
+      });
+    }
+
     // Find release matches
     let releaseMatch;
     while ((releaseMatch = releasePattern.exec(text)) !== null) {
@@ -93,6 +108,28 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
         end: labelMatch.index + labelMatch[0].length,
         content: labelMatch[1],
         id: labelMatch[1],
+      });
+    }
+
+    // Find italic text matches
+    let italicMatch;
+    while ((italicMatch = italicPattern.exec(text)) !== null) {
+      matches.push({
+        type: "italic",
+        start: italicMatch.index,
+        end: italicMatch.index + italicMatch[0].length,
+        content: italicMatch[1],
+      });
+    }
+
+    // Find timespan matches
+    let timespanMatch;
+    while ((timespanMatch = timespanPattern.exec(text)) !== null) {
+      matches.push({
+        type: "timespan",
+        start: timespanMatch.index,
+        end: timespanMatch.index + timespanMatch[0].length,
+        content: timespanMatch[1],
       });
     }
 
@@ -150,14 +187,30 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
         );
 
       case "artist":
-        return (
-          <span
-            key={index}
-            className="font-medium text-gray-800 dark:text-gray-200"
-          >
-            {segment.content}
-          </span>
-        );
+        // Check if it's a numeric ID (from [a123456] format)
+        const isNumericId = /^Artist \d+$/.test(segment.content);
+
+        if (isNumericId) {
+          return (
+            <Link
+              key={index}
+              to="/artist/$id"
+              params={{ id: segment.id || "0" }}
+              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              {segment.content}
+            </Link>
+          );
+        } else {
+          return (
+            <span
+              key={index}
+              className="font-medium text-gray-800 dark:text-gray-200"
+            >
+              {segment.content}
+            </span>
+          );
+        }
 
       case "label":
         return (
@@ -179,6 +232,20 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
           >
             [Release {segment.id}]
           </Link>
+        );
+
+      case "italic":
+        return (
+          <em key={index} className="">
+            {segment.content}:
+          </em>
+        );
+
+      case "timespan":
+        return (
+          <span key={index} className="text-gray-600 dark:text-gray-400">
+            {segment.content}
+          </span>
         );
 
       default:
