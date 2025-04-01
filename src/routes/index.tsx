@@ -57,9 +57,11 @@ function Home() {
     try {
       const releaseInfo = await getReleaseInfo(album.id);
 
-      const trackTitles = releaseInfo.tracklist
-        .filter((track) => track.type_ !== "heading")
-        .map((track) => track.title);
+      const filteredTracks = releaseInfo.tracklist
+        .filter((track) => track.type_ !== "heading");
+        
+      const trackTitles = filteredTracks.map((track) => track.title);
+      const trackDurations = filteredTracks.map((track) => track.duration);
 
       if (trackTitles.length === 0) {
         throw new Error("No tracks found for this album");
@@ -70,6 +72,7 @@ function Home() {
         tracks: trackTitles,
         album: album.title,
         token: lastfmToken,
+        durations: trackDurations,
       });
 
       console.log(
