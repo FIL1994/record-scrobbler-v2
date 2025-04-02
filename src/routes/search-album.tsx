@@ -40,6 +40,8 @@ function SearchAlbum() {
           </div>
           <input
             autoFocus
+            name="album-search"
+            autoComplete="on"
             type="text"
             value={searchQuery}
             onChange={(e) => {
