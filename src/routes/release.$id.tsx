@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { type } from "arktype";
 import { ArrowLeft, Share2 } from "lucide-react";
 import { useState } from "react";
 import { PageContainer } from "~/components/PageContainer";
@@ -13,6 +14,7 @@ import { ViewTransitionType } from "~/utils/viewTransitions";
 
 export const Route = createFileRoute("/release/$id")({
   component: ReleaseComponent,
+  validateSearch: type({}),
   loader: ({ context, params: { id } }) => {
     const { queryClient } = context as RouterContext;
     // return queryClient.ensureQueryData(discogsReleaseOptions(Number(id)));
