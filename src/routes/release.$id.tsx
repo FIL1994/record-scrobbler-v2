@@ -133,12 +133,12 @@ function ReleaseComponent() {
             >
               {normalizeArtistName(release.artists[0].name)}
             </Link>
-            <p className="text-gray-500">{release.year}</p>
+            {!!release.year && <p className="text-gray-500">{release.year}</p>}
 
             <button
               disabled={selectedTracks.size === 0}
               onClick={handleScrobble}
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
+              className="mt-4 flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
             >
               <Share2 size={16} />
               Scrobble {selectedTracks.size} Track

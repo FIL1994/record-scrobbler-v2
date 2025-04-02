@@ -49,7 +49,7 @@ function Home() {
   });
 
   const filteredCollection = collection.filter((album) => {
-    const query = searchQuery.toLowerCase();
+    const query = searchQuery.trim().toLowerCase();
     return (
       album.title.toLowerCase().includes(query) ||
       album.artist.toLowerCase().includes(query) ||
@@ -81,7 +81,7 @@ function Home() {
             disabled={loading}
             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Loading..." : "Fetch Collection"}
+            {loading ? "Loading..." : "Import Collection"}
           </button>
         </form>
         {error && <p className="mt-2 text-red-600">{error.message}</p>}
@@ -111,6 +111,7 @@ function Home() {
             onScrobble={scrobbleAlbum}
             isScrobbling={Boolean(scrobblingAlbums[album.id])}
             showArtistLink
+            from="collection"
           />
         ))}
       </div>

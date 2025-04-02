@@ -10,6 +10,7 @@ interface AlbumCardProps {
   onScrobble: (album: Album) => void;
   isScrobbling?: boolean;
   showArtistLink?: boolean;
+  from?: "collection" | "search";
 }
 
 export function AlbumCard({
@@ -17,6 +18,7 @@ export function AlbumCard({
   onScrobble,
   isScrobbling = false,
   showArtistLink = false,
+  from,
 }: AlbumCardProps) {
   const artistName = normalizeArtistName(album.artist);
   const artistId = album.artistId?.toString();
@@ -90,7 +92,7 @@ export function AlbumCard({
           <Link
             to="/release/$id"
             params={{ id: album.id.toString() }}
-            search={{ from: "collection" }}
+            search={{ from }}
             className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 min-h-[40px]"
             viewTransition={{
               types: [ViewTransitionType.SlideUp],
