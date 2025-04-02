@@ -25,6 +25,7 @@ const columns: ColumnDef<DiscogsTrack>[] = [
       <div className="flex justify-center">
         <input
           type="checkbox"
+          title={table.getIsAllRowsSelected() ? "Deselect all" : "Select all"}
           checked={table.getIsAllRowsSelected()}
           onChange={table.getToggleAllRowsSelectedHandler()}
           className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"

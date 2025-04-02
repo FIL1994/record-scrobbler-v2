@@ -44,6 +44,7 @@ function SearchAlbum() {
             <Search className="h-5 w-5 text-gray-400" />
           </div>
           <input
+            autoFocus
             type="text"
             value={searchQuery}
             onChange={(e) => {
