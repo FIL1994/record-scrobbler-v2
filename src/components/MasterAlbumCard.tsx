@@ -49,6 +49,7 @@ export function MasterAlbumCard({ album }: MasterAlbumCardProps) {
           navigate({
             to: "/release/$id",
             params: { id: data.main_release.toString() },
+            search: { from: "search" },
           });
         }
       } catch (error) {
@@ -95,6 +96,7 @@ export function MasterAlbumCard({ album }: MasterAlbumCardProps) {
     <Link
       to={masterData ? "/release/$id" : ("#" as string)}
       params={{ id: masterData?.main_release.toString() }}
+      search={{ from: "search" }}
       className={cardClassName}
       viewTransition={{ types: [ViewTransitionType.SlideUp] }}
       onClick={masterData ? undefined : handleClick}

@@ -14,7 +14,9 @@ import { ViewTransitionType } from "~/utils/viewTransitions";
 
 export const Route = createFileRoute("/release/$id")({
   component: ReleaseComponent,
-  validateSearch: type({}),
+  validateSearch: type({
+    from: "'collection'|'search'|undefined",
+  }),
   loader: ({ context, params: { id } }) => {
     const { queryClient } = context as RouterContext;
     // return queryClient.ensureQueryData(discogsReleaseOptions(Number(id)));
@@ -25,6 +27,7 @@ export const Route = createFileRoute("/release/$id")({
 
 function ReleaseComponent() {
   const { id } = Route.useParams();
+  const { from } = Route.useSearch();
   const { data: release } = useSuspenseQuery(discogsReleaseOptions(Number(id)));
   const [selectedTracks, setSelectedTracks] = useState<Set<string>>(new Set());
 
@@ -82,16 +85,29 @@ function ReleaseComponent() {
 
   return (
     <PageContainer className="max-w-5xl">
-      <Link
-        to="/"
-        className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
-        viewTransition={{
-          types: [ViewTransitionType.Flip],
-        }}
-      >
-        <ArrowLeft size={20} />
-        Back to Collection
-      </Link>
+      {from === "collection" ? (
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
+          viewTransition={{
+            types: [ViewTransitionType.Flip],
+          }}
+        >
+          <ArrowLeft size={20} />
+          Back to Collection
+        </Link>
+      ) : from === "search" ? (
+        <Link
+          to="/search-album"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
+          viewTransition={{
+            types: [ViewTransitionType.Flip],
+          }}
+        >
+          <ArrowLeft size={20} />
+          Back to Search
+        </Link>
+      ) : null}
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden [view-transition-name:main-content]">
         <div className="p-6 flex gap-6">
