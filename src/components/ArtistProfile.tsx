@@ -17,7 +17,15 @@ interface ArtistProfileProps {
 const MAX_PROFILE_LENGTH = 320;
 
 interface ParsedSegment {
-  type: "text" | "url" | "artist" | "release" | "label" | "italic" | "timespan";
+  type:
+    | "text"
+    | "url"
+    | "artist"
+    | "release"
+    | "label"
+    | "italic"
+    | "timespan"
+    | "bold";
   content: string;
   url?: string;
   id?: string;
@@ -72,7 +80,7 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
               key={index}
               className="font-medium text-gray-800 dark:text-gray-200"
             >
-              {segment.content}
+              {normalizeArtistName(segment.content)}
             </span>
           );
         }
@@ -96,6 +104,9 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
             {segment.content}:
           </em>
         );
+
+      case "bold":
+        return <strong key={index}>{segment.content}</strong>;
 
       case "timespan":
         return (
@@ -153,11 +164,19 @@ function parseProfileText(text: string): ParsedSegment[] {
   const releasePattern = /\[r=([^\]]+)\]/g;
   const labelPattern = /\[l=([^\]]+)\]/g;
   const italicPattern = /\[i\]([^\[]+)\[\/i\]/g;
+  const boldPattern = /\[b\]([^\[]+)\[\/b\]/g;
   const timespanPattern = /\[u\]([^\[]+)\[\/u\]/g;
 
   // Find all matches and their positions
   const matches: Array<{
-    type: "url" | "artist" | "release" | "label" | "italic" | "timespan";
+    type:
+      | "url"
+      | "artist"
+      | "release"
+      | "label"
+      | "italic"
+      | "timespan"
+      | "bold";
     start: number;
     end: number;
     content: string;
@@ -233,6 +252,17 @@ function parseProfileText(text: string): ParsedSegment[] {
       start: italicMatch.index,
       end: italicMatch.index + italicMatch[0].length,
       content: italicMatch[1],
+    });
+  }
+
+  // Find bold text matches
+  let boldMatch;
+  while ((boldMatch = boldPattern.exec(text)) !== null) {
+    matches.push({
+      type: "bold",
+      start: boldMatch.index,
+      end: boldMatch.index + boldMatch[0].length,
+      content: boldMatch[1],
     });
   }
 
