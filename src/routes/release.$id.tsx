@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { type } from "arktype";
 import { ArrowLeft, Share2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PageContainer } from "~/components/PageContainer";
 import { TrackTable } from "~/components/TrackTable";
 import type { RouterContext } from "~/router";
@@ -29,7 +29,10 @@ function ReleaseComponent() {
   const { id } = Route.useParams();
   const { from } = Route.useSearch();
   const { data: release } = useSuspenseQuery(discogsReleaseOptions(Number(id)));
-  const [selectedTracks, setSelectedTracks] = useState<Set<string>>(new Set());
+
+  const [selectedTracks, setSelectedTracks] = useState<Set<string>>(
+    () => new Set(release.tracklist.map((track) => track.position))
+  );
 
   if (!release) {
     return (
