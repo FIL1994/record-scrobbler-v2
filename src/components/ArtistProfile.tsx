@@ -5,8 +5,12 @@ import { ArtistTooltip } from "~/components/tooltips/ArtistTooltip";
 import { ReleaseTooltip } from "~/components/tooltips/ReleaseTooltip";
 import { useTooltipTriggerState } from "react-stately";
 import { useTooltipTrigger } from "react-aria";
-import { useQueryClient } from "@tanstack/react-query";
-import { discogsArtistOptions, discogsReleaseOptions } from "~/utils/queries";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  discogsArtistOptions,
+  discogsMasterOptions,
+  discogsReleaseOptions,
+} from "~/utils/queries";
 import { normalizeArtistName } from "~/utils/common";
 import { defaultTooltipState } from "./tooltips/tooltipUtils";
 
@@ -22,6 +26,7 @@ interface ParsedSegment {
     | "url"
     | "artist"
     | "release"
+    | "master"
     | "label"
     | "italic"
     | "timespan"
@@ -105,6 +110,9 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
       case "release":
         return <ReleaseLink key={index} id={segment.id!} />;
 
+      case "master":
+        return <MasterLink key={index} id={segment.id!} />;
+
       case "italic":
         return (
           <em key={index} className="">
@@ -169,6 +177,7 @@ function parseProfileText(text: string): ParsedSegment[] {
   const artistPattern = /\[a=([^\]]+)\]/g;
   const artistIdPattern = /\[a(\d+)\]/g;
   const releasePattern = /\[r=([^\]]+)\]/g;
+  const masterPattern = /\[m=(\d+)\]/g;
   const labelPattern = /\[l=([^\]]+)\]/g;
   const labelIdPattern = /\[l(\d+)\]/g;
   const italicPattern = /\[i\]([^\[]+)\[\/i\]/g;
@@ -181,6 +190,7 @@ function parseProfileText(text: string): ParsedSegment[] {
       | "url"
       | "artist"
       | "release"
+      | "master"
       | "label"
       | "italic"
       | "timespan"
@@ -237,6 +247,18 @@ function parseProfileText(text: string): ParsedSegment[] {
       end: releaseMatch.index + releaseMatch[0].length,
       content: "", // Release pattern doesn't include content in the regex
       id: releaseMatch[1],
+    });
+  }
+
+  // Find master release matches
+  let masterMatch;
+  while ((masterMatch = masterPattern.exec(text)) !== null) {
+    matches.push({
+      type: "master",
+      start: masterMatch.index,
+      end: masterMatch.index + masterMatch[0].length,
+      content: `Master ${masterMatch[1]}`,
+      id: masterMatch[1],
     });
   }
 
@@ -348,7 +370,7 @@ function ReleaseLink({ id, ...props }: { id: string }) {
   const queryKey = discogsReleaseOptions(releaseId).queryKey;
   const cachedData = queryClient.getQueryData(queryKey);
 
-  const displayText = cachedData ? cachedData.title : `Release ${id}`;
+  const displayText = cachedData ? cachedData.title : `[Release ${id}]`;
 
   return (
     <span className="relative">
@@ -384,6 +406,48 @@ function LabelLink({ id }: { id: string }) {
   );
 }
 
+function MasterLink({ id, ...props }: { id: string }) {
+  const state = useTooltipTriggerState({
+    ...props,
+    ...defaultTooltipState,
+  });
+  const ref = useRef(null);
+  const { triggerProps, tooltipProps } = useTooltipTrigger(props, state, ref);
+  const [wasHovered, setWasHovered] = useState(false);
+
+  const { data: master } = useQuery({
+    ...discogsMasterOptions(Number(id)),
+    enabled: wasHovered,
+  });
+  const { data: release } = useQuery({
+    ...discogsReleaseOptions(master?.id!),
+    enabled: !!master,
+  });
+
+  const displayText = release ? release.title : `[Master ${id}]`;
+
+  return (
+    <span className="relative" onMouseOver={() => setWasHovered(true)}>
+      <Link
+        ref={ref}
+        {...triggerProps}
+        to="/release/$id"
+        params={{ id: id || "0" }}
+        search={{ from: "search" }}
+        className={linkClasses}
+      >
+        {displayText}
+      </Link>
+
+      {state.isOpen && (
+        <span {...tooltipProps}>
+          <ReleaseTooltip releaseId={id} state={state} {...tooltipProps} />
+        </span>
+      )}
+    </span>
+  );
+}
+
 function ArtistLink({
   id,
   content,
@@ -406,7 +470,7 @@ function ArtistLink({
 
   const displayText = cachedData
     ? normalizeArtistName(cachedData.name)
-    : content;
+    : `[Artist ${id}]`;
 
   return (
     <span className="relative">
