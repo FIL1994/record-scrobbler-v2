@@ -23,7 +23,27 @@ export interface Album {
 }
 
 export interface DiscogsMasterRelease {
+  id: number;
   year: number;
+  title: string;
+  artists: Array<{
+    name: string;
+    id: number;
+    thumbnail_url?: string;
+  }>;
+  main_release: number;
+  main_release_url: string;
+  resource_url: string;
+  uri: string;
+  versions_url: string;
+  images?: Array<{
+    type: "primary" | "secondary";
+    uri: string;
+    uri150: string;
+    width: number;
+    height: number;
+  }>;
+  tracklist?: DiscogsTrack[];
 }
 
 export interface DiscogsTrack {

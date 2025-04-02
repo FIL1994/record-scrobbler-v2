@@ -1,12 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Search, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { AlbumCard } from "~/components/AlbumCard";
 import { PageContainer } from "~/components/PageContainer";
-import { useScrobbleAlbum } from "~/hooks/useScrobbleAlbum";
+import { MasterAlbumCard } from "~/components/MasterAlbumCard";
 import { discogsSearchOptions } from "~/utils/queries";
-import { ViewTransitionType } from "~/utils/viewTransitions";
 import { useDebouncedValue } from "~/hooks/useDebouncedValue";
 
 export const Route = createFileRoute("/search-album")({
@@ -17,7 +15,6 @@ function SearchAlbum() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedQuery = useDebouncedValue(searchQuery, 500);
   const [currentPage, setCurrentPage] = useState(1);
-  const { scrobbleAlbum, scrobblingAlbums } = useScrobbleAlbum();
 
   console.log({
     searchQuery,
@@ -81,13 +78,7 @@ function SearchAlbum() {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
             {data.results.map((album) => (
-              <AlbumCard
-                key={album.id}
-                album={album}
-                onScrobble={scrobbleAlbum}
-                isScrobbling={Boolean(scrobblingAlbums[album.id])}
-                showArtistLink={false}
-              />
+              <MasterAlbumCard key={album.id} album={album} />
             ))}
           </div>
 

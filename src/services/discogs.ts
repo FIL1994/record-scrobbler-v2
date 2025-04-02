@@ -4,12 +4,18 @@ import type {
   DiscogsArtistResponse,
   DiscogsArtistRelease,
   DiscogsSearchResponse,
+  DiscogsMasterRelease,
 } from "~/types";
 
 const DISCOGS_API = "https://api.discogs.com";
 
-// oxlint-disable-next-line no-unused-vars
-async function getMasterReleaseYear(masterId: number): Promise<number> {
+/**
+ * Get master release information from Discogs
+ * @param masterId The Discogs master ID
+ */
+export async function getMasterRelease(
+  masterId: number
+): Promise<DiscogsMasterRelease> {
   const token = import.meta.env.VITE_DISCOGS_TOKEN;
 
   const response = await fetch(
@@ -21,7 +27,7 @@ async function getMasterReleaseYear(masterId: number): Promise<number> {
   }
 
   const data = await response.json();
-  return data.year;
+  return data as DiscogsMasterRelease;
 }
 
 export async function getCollection(username: string) {
