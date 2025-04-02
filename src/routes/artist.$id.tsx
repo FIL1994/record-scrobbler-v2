@@ -1,22 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
-import { PageContainer } from "~/components/PageContainer";
 import { AlbumCard } from "~/components/AlbumCard";
 import { ArtistLinks } from "~/components/ArtistLinks";
 import { ArtistProfile } from "~/components/ArtistProfile";
+import { PageContainer } from "~/components/PageContainer";
+import { useScrobbleAlbum } from "~/hooks/useScrobbleAlbum";
 import type { RouterContext } from "~/router";
-import type { Album } from "~/types";
 import { normalizeArtistName } from "~/utils/common";
-import { scrobbleTracks } from "~/services/lastfm";
-import { getSessionToken } from "~/utils/getToken";
 import {
   discogsArtistOptions,
   discogsArtistReleasesOptions,
 } from "~/utils/queries";
 import { ViewTransitionType } from "~/utils/viewTransitions";
-import { toast } from "react-toastify";
 
 export const Route = createFileRoute("/artist/$id")({
   component: ArtistComponent,
@@ -43,38 +39,11 @@ function ArtistComponent() {
   const { id } = Route.useParams();
   const { data: artist } = useQuery(discogsArtistOptions(Number(id)));
   const { data: releases } = useQuery(discogsArtistReleasesOptions(Number(id)));
-  const [scrobblingAlbum, setScrobblingAlbum] = useState<number | null>(null);
+  const { scrobbleAlbum, scrobblingAlbums } = useScrobbleAlbum();
 
   if (!artist || !releases) {
     return <Loading />;
   }
-
-  const handleScrobble = async (album: Album) => {
-    const lastfmToken = getSessionToken();
-    if (!lastfmToken) {
-      toast.error("You need to connect to Last.fm first");
-      return;
-    }
-
-    setScrobblingAlbum(album.id);
-
-    try {
-      // TODO - fetch the tracks for this album and scrobble them
-      // For now, we'll just simulate it.
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      if (false) {
-        scrobbleTracks();
-      }
-
-      toast.success(`Scrobbled ${album.title}`);
-    } catch (err) {
-      toast.error("Failed to scrobble album");
-      console.error(err);
-    } finally {
-      setScrobblingAlbum(null);
-    }
-  };
 
   const artistImage = artist.images?.[0]?.uri;
 
@@ -130,8 +99,8 @@ function ArtistComponent() {
             <AlbumCard
               key={album.id}
               album={album}
-              onScrobble={handleScrobble}
-              isScrobbling={scrobblingAlbum === album.id}
+              onScrobble={scrobbleAlbum}
+              isScrobbling={Boolean(scrobblingAlbums[album.id])}
               showArtistLink={false}
             />
           ))}

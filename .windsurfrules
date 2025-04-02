@@ -10,6 +10,7 @@ Code Style
 - Use PascalCase for component names and enums
 - Prefer tailwind clases over inline styles
 - Use the LocalStorageKeys enum for localStorage keys
+- Use react-toastify for notifications
 
 Formatting
 - Use consistent Tailwind class ordering 
