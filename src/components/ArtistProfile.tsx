@@ -86,14 +86,21 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
         }
 
       case "label":
-        return (
-          <span
-            key={index}
-            className="font-medium text-gray-700 dark:text-gray-300"
-          >
-            {segment.content}
-          </span>
-        );
+        // Check if it's a numeric ID (from [l123456] format)
+        const isLabelId = /^Label \d+$/.test(segment.content);
+
+        if (isLabelId) {
+          return <LabelLink key={index} id={segment.id!} />;
+        } else {
+          return (
+            <span
+              key={index}
+              className="font-medium text-gray-700 dark:text-gray-300"
+            >
+              {segment.content}
+            </span>
+          );
+        }
 
       case "release":
         return <ReleaseLink key={index} id={segment.id!} />;
@@ -163,6 +170,7 @@ function parseProfileText(text: string): ParsedSegment[] {
   const artistIdPattern = /\[a(\d+)\]/g;
   const releasePattern = /\[r=([^\]]+)\]/g;
   const labelPattern = /\[l=([^\]]+)\]/g;
+  const labelIdPattern = /\[l(\d+)\]/g;
   const italicPattern = /\[i\]([^\[]+)\[\/i\]/g;
   const boldPattern = /\[b\]([^\[]+)\[\/b\]/g;
   const timespanPattern = /\[u\]([^\[]+)\[\/u\]/g;
@@ -244,6 +252,18 @@ function parseProfileText(text: string): ParsedSegment[] {
     });
   }
 
+  // Find label ID matches [l123456]
+  let labelIdMatch;
+  while ((labelIdMatch = labelIdPattern.exec(text)) !== null) {
+    matches.push({
+      type: "label",
+      start: labelIdMatch.index,
+      end: labelIdMatch.index + labelIdMatch[0].length,
+      content: `Label ${labelIdMatch[1]}`,
+      id: labelIdMatch[1],
+    });
+  }
+
   // Find italic text matches
   let italicMatch;
   while ((italicMatch = italicPattern.exec(text)) !== null) {
@@ -312,6 +332,9 @@ function parseProfileText(text: string): ParsedSegment[] {
   return segments;
 }
 
+const linkClasses =
+  "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300";
+
 function ReleaseLink({ id, ...props }: { id: string }) {
   const state = useTooltipTriggerState({
     ...props,
@@ -334,7 +357,7 @@ function ReleaseLink({ id, ...props }: { id: string }) {
         {...triggerProps}
         to="/release/$id"
         params={{ id: id || "0" }}
-        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+        className={linkClasses}
       >
         {displayText}
       </Link>
@@ -345,6 +368,19 @@ function ReleaseLink({ id, ...props }: { id: string }) {
         </span>
       )}
     </span>
+  );
+}
+
+function LabelLink({ id }: { id: string }) {
+  return (
+    <a
+      href={`https://www.discogs.com/label/${id}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={linkClasses}
+    >
+      {`Label ${id}`}
+    </a>
   );
 }
 
@@ -379,7 +415,7 @@ function ArtistLink({
         {...triggerProps}
         to="/artist/$id"
         params={{ id: id || "0" }}
-        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+        className={linkClasses}
       >
         {displayText}
       </Link>
