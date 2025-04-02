@@ -1,7 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { type } from "arktype";
 import { ArrowLeft, Share2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PageContainer } from "~/components/PageContainer";
 import { TrackTable } from "~/components/TrackTable";
 import type { RouterContext } from "~/router";
@@ -13,6 +14,9 @@ import { ViewTransitionType } from "~/utils/viewTransitions";
 
 export const Route = createFileRoute("/release/$id")({
   component: ReleaseComponent,
+  validateSearch: type({
+    from: "'collection'|'search'|undefined",
+  }),
   loader: ({ context, params: { id } }) => {
     const { queryClient } = context as RouterContext;
     // return queryClient.ensureQueryData(discogsReleaseOptions(Number(id)));
@@ -23,8 +27,12 @@ export const Route = createFileRoute("/release/$id")({
 
 function ReleaseComponent() {
   const { id } = Route.useParams();
+  const { from } = Route.useSearch();
   const { data: release } = useSuspenseQuery(discogsReleaseOptions(Number(id)));
-  const [selectedTracks, setSelectedTracks] = useState<Set<string>>(new Set());
+
+  const [selectedTracks, setSelectedTracks] = useState<Set<string>>(
+    () => new Set(release.tracklist.map((track) => track.position))
+  );
 
   if (!release) {
     return (
@@ -80,16 +88,29 @@ function ReleaseComponent() {
 
   return (
     <PageContainer className="max-w-5xl">
-      <Link
-        to="/"
-        className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
-        viewTransition={{
-          types: [ViewTransitionType.Flip],
-        }}
-      >
-        <ArrowLeft size={20} />
-        Back to Collection
-      </Link>
+      {from === "collection" ? (
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
+          viewTransition={{
+            types: [ViewTransitionType.Flip],
+          }}
+        >
+          <ArrowLeft size={20} />
+          Back to Collection
+        </Link>
+      ) : from === "search" ? (
+        <Link
+          to="/search-album"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
+          viewTransition={{
+            types: [ViewTransitionType.Flip],
+          }}
+        >
+          <ArrowLeft size={20} />
+          Back to Search
+        </Link>
+      ) : null}
 
       <div className="bg-white rounded-lg shadow-md overflow-hidden [view-transition-name:main-content]">
         <div className="p-6 flex gap-6">

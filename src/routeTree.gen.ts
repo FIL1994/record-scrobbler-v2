@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SearchAlbumImport } from './routes/search-album'
 import { Route as ScrobbleImport } from './routes/scrobble'
 import { Route as IndexImport } from './routes/index'
 import { Route as ReleaseIdImport } from './routes/release.$id'
@@ -19,6 +20,12 @@ import { Route as AuthLastfmCallbackImport } from './routes/auth.lastfm.callback
 import { Route as AuthDiscogsCallbackImport } from './routes/auth.discogs.callback'
 
 // Create/Update Routes
+
+const SearchAlbumRoute = SearchAlbumImport.update({
+  id: '/search-album',
+  path: '/search-album',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ScrobbleRoute = ScrobbleImport.update({
   id: '/scrobble',
@@ -74,6 +81,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScrobbleImport
       parentRoute: typeof rootRoute
     }
+    '/search-album': {
+      id: '/search-album'
+      path: '/search-album'
+      fullPath: '/search-album'
+      preLoaderRoute: typeof SearchAlbumImport
+      parentRoute: typeof rootRoute
+    }
     '/artist/$id': {
       id: '/artist/$id'
       path: '/artist/$id'
@@ -110,6 +124,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/scrobble': typeof ScrobbleRoute
+  '/search-album': typeof SearchAlbumRoute
   '/artist/$id': typeof ArtistIdRoute
   '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
@@ -119,6 +134,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/scrobble': typeof ScrobbleRoute
+  '/search-album': typeof SearchAlbumRoute
   '/artist/$id': typeof ArtistIdRoute
   '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
@@ -129,6 +145,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/scrobble': typeof ScrobbleRoute
+  '/search-album': typeof SearchAlbumRoute
   '/artist/$id': typeof ArtistIdRoute
   '/release/$id': typeof ReleaseIdRoute
   '/auth/discogs/callback': typeof AuthDiscogsCallbackRoute
@@ -140,6 +157,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/scrobble'
+    | '/search-album'
     | '/artist/$id'
     | '/release/$id'
     | '/auth/discogs/callback'
@@ -148,6 +166,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/scrobble'
+    | '/search-album'
     | '/artist/$id'
     | '/release/$id'
     | '/auth/discogs/callback'
@@ -156,6 +175,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/scrobble'
+    | '/search-album'
     | '/artist/$id'
     | '/release/$id'
     | '/auth/discogs/callback'
@@ -166,6 +186,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ScrobbleRoute: typeof ScrobbleRoute
+  SearchAlbumRoute: typeof SearchAlbumRoute
   ArtistIdRoute: typeof ArtistIdRoute
   ReleaseIdRoute: typeof ReleaseIdRoute
   AuthDiscogsCallbackRoute: typeof AuthDiscogsCallbackRoute
@@ -175,6 +196,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ScrobbleRoute: ScrobbleRoute,
+  SearchAlbumRoute: SearchAlbumRoute,
   ArtistIdRoute: ArtistIdRoute,
   ReleaseIdRoute: ReleaseIdRoute,
   AuthDiscogsCallbackRoute: AuthDiscogsCallbackRoute,
@@ -193,6 +215,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/scrobble",
+        "/search-album",
         "/artist/$id",
         "/release/$id",
         "/auth/discogs/callback",
@@ -204,6 +227,9 @@ export const routeTree = rootRoute
     },
     "/scrobble": {
       "filePath": "scrobble.tsx"
+    },
+    "/search-album": {
+      "filePath": "search-album.tsx"
     },
     "/artist/$id": {
       "filePath": "artist.$id.tsx"

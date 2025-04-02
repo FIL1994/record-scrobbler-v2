@@ -29,6 +29,7 @@ export function AlbumCard({
             src={album.coverImage}
             alt={`${album.title} cover`}
             className="w-full h-48 object-cover"
+            loading="lazy"
           />
         ) : (
           <div className="w-full h-48 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
@@ -89,6 +90,7 @@ export function AlbumCard({
           <Link
             to="/release/$id"
             params={{ id: album.id.toString() }}
+            search={{ from: "collection" }}
             className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 min-h-[40px]"
             viewTransition={{
               types: [ViewTransitionType.SlideUp],

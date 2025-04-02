@@ -2,6 +2,8 @@ Libraries
 - use bun for installing dependencies and running tasks
 - use tailwind for styling
 - use lucide-react for icons
+- use @tanstack/react-query for data fetching
+- use @tanstack/react-router for routing
 
 Code Style
 - Prefer named exports over default exports
@@ -10,6 +12,7 @@ Code Style
 - Use PascalCase for component names and enums
 - Prefer tailwind clases over inline styles
 - Use the LocalStorageKeys enum for localStorage keys
+- Use react-toastify for notifications
 
 Formatting
 - Use consistent Tailwind class ordering 

@@ -4,6 +4,8 @@ import {
   getReleaseInfo,
   getArtistInfo,
   getArtistReleases,
+  searchAlbums,
+  getMasterRelease,
 } from "~/services/discogs";
 import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import { getUserInfo } from "~/services/lastfm";
@@ -17,11 +19,25 @@ const queryKeyStore = createQueryKeyStore({
     release: (releaseId: number) => [releaseId],
     artist: (artistId: number) => [artistId],
     artistReleases: (artistId: number) => [artistId, "releases"],
+    search: (query: string, page: number) => ["search", query, page],
+    master: (masterId: number) => [masterId],
   },
   lastfm: {
     userInfo: (sessionToken: string) => [sessionToken, "user-info"],
   },
 });
+
+export const lastfmUserInfoOptions = () => {
+  const sessionToken = getSessionToken();
+  const key = queryKeyStore.lastfm.userInfo(sessionToken!).queryKey;
+
+  return queryOptions({
+    queryKey: key,
+    queryFn: () => getUserInfo(sessionToken!),
+    retry: false,
+    enabled: Boolean(sessionToken),
+  });
+};
 
 export const discogsCollectionOptions = (username: string) => {
   const key = queryKeyStore.discogs.collection(username).queryKey;
@@ -112,14 +128,53 @@ export const discogsArtistReleasesOptions = (artistId: number) => {
   });
 };
 
-export const lastfmUserInfoOptions = () => {
-  const sessionToken = getSessionToken();
-  const key = queryKeyStore.lastfm.userInfo(sessionToken!).queryKey;
+export const discogsSearchOptions = (query: string, page = 1) => {
+  const key = queryKeyStore.discogs.search(query, page).queryKey;
 
   return queryOptions({
     queryKey: key,
-    queryFn: () => getUserInfo(sessionToken!),
+    queryFn: () => searchAlbums(query, page),
+    enabled: Boolean(query) && query.length > 2,
     retry: false,
-    enabled: Boolean(sessionToken),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: minutesToMilliseconds(5),
+    gcTime: minutesToMilliseconds(10),
+    select: (data) => {
+      return {
+        pagination: data.pagination,
+        results: data.results.map((result) => {
+          const [artist, title] = result.title.split(/ - (.+)/);
+
+          return {
+            id: result.id,
+            title: title,
+            artist: artist,
+            year: parseInt(result.year) || 0,
+            coverImage: result.cover_image || result.thumb,
+          } satisfies Album;
+        }),
+      };
+    },
+  });
+};
+
+export const discogsMasterOptions = (
+  masterId: number,
+  opts: { enabled?: boolean } = {}
+) => {
+  const key = queryKeyStore.discogs.master(masterId).queryKey;
+
+  return queryOptions({
+    queryKey: key,
+    queryFn: () => getMasterRelease(masterId),
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
+    gcTime: minutesToMilliseconds(15),
+    ...opts,
   });
 };
