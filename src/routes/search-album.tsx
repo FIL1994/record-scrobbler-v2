@@ -16,11 +16,6 @@ function SearchAlbum() {
   const debouncedQuery = useDebouncedValue(searchQuery, 500);
   const [currentPage, setCurrentPage] = useState(1);
 
-  console.log({
-    searchQuery,
-    debouncedQuery,
-  });
-
   const { data, isLoading, isError } = useQuery(
     discogsSearchOptions(debouncedQuery, currentPage)
   );
@@ -51,15 +46,15 @@ function SearchAlbum() {
               setSearchQuery(e.target.value);
               setCurrentPage(1);
             }}
-            placeholder="Search for albums on Discogs..."
+            placeholder="Search for an album..."
             className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
           />
         </div>
       </div>
 
-      {isLoading && debouncedQuery && (
+      {(isLoading || !data) && searchQuery && (
         <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-red-500"></div>
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-red-500" />
         </div>
       )}
 
