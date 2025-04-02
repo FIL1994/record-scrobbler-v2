@@ -3,6 +3,7 @@ import type {
   DiscogsReleaseResponse,
   DiscogsArtistResponse,
   DiscogsArtistRelease,
+  DiscogsSearchResponse,
 } from "~/types";
 
 const DISCOGS_API = "https://api.discogs.com";
@@ -119,4 +120,30 @@ export async function getArtistReleases(artistId: number) {
 
   const data = await response.json();
   return data.releases as DiscogsArtistRelease[];
+}
+
+/**
+ * Search for albums on Discogs
+ * @see https://www.discogs.com/developers#page:database,header:database-search
+ */
+export async function searchAlbums(query: string, page = 1, perPage = 12) {
+  const token = import.meta.env.VITE_DISCOGS_TOKEN || "";
+
+  const params = new URLSearchParams({
+    q: query,
+    token,
+    page: page.toString(),
+    per_page: perPage.toString(),
+    type: "master",
+  });
+
+  const response = await fetch(
+    `${DISCOGS_API}/database/search?${params.toString()}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to search albums");
+  }
+
+  return (await response.json()) as DiscogsSearchResponse;
 }

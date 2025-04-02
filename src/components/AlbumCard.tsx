@@ -29,6 +29,7 @@ export function AlbumCard({
             src={album.coverImage}
             alt={`${album.title} cover`}
             className="w-full h-48 object-cover"
+            loading="lazy"
           />
         ) : (
           <div className="w-full h-48 flex items-center justify-center bg-gray-100 dark:bg-gray-800">

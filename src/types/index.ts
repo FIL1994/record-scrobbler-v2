@@ -17,7 +17,7 @@ export interface Album {
   id: number;
   title: string;
   artist: string;
-  artistId: number;
+  artistId?: number;
   year: number;
   coverImage: string;
 }
@@ -102,4 +102,48 @@ export interface DiscogsArtistRelease {
   role: "Main" | Omit<string, "Main">;
   artist: string;
   format: string;
+}
+
+export interface DiscogsSearchResult {
+  id: number;
+  title: string;
+  year: string;
+  cover_image: string;
+  thumb: string;
+  type: "release" | "master";
+  master_id?: number;
+  resource_url: string;
+  format: string[];
+  label: string[];
+  genre: string[];
+  style: string[];
+  country: string;
+  barcode: string[];
+  uri: string;
+  catno: string;
+  community: {
+    want: number;
+    have: number;
+  };
+  format_quantity: number;
+  formats: Array<{
+    name: string;
+    qty: string;
+    descriptions?: string[];
+  }>;
+}
+
+export interface DiscogsSearchResponse {
+  pagination: {
+    page: number;
+    pages: number;
+    per_page: number;
+    items: number;
+    urls: {
+      last?: string;
+      next?: string;
+      prev?: string;
+    };
+  };
+  results: DiscogsSearchResult[];
 }
