@@ -4,6 +4,10 @@
 
 A web app to scrobble your Discogs collection to Last.fm.
 
+## Analytics
+
+This web app uses [Umami](https://us.umami.is/dashboard) for analytics.
+
 ## Setup
 
 Copy `.env.example` to `.env` and fill in the required values.

@@ -40,6 +40,15 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: toastifyCss },
       { rel: "icon", href: "/favicon.png" },
     ],
+    scripts: import.meta.env.PROD
+      ? [
+          {
+            defer: true,
+            src: "https://cloud.umami.is/script.js",
+            "data-website-id": import.meta.env.VITE_UMAMI_WEBSITE_ID,
+          },
+        ]
+      : [],
   }),
   component: RootComponent,
 });
