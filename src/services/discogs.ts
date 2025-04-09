@@ -137,7 +137,7 @@ export async function getArtistReleases(
   }
 
   const data = await response.json();
-  return data;
+  return data as { pagination: any; releases: DiscogsArtistRelease[] };
 }
 
 /**
