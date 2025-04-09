@@ -43,16 +43,17 @@ function ArtistComponent() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data: artist } = useQuery(discogsArtistOptions(Number(id)));
-  const { data: releasesData } = useQuery(
+  const { data: releasesData, isLoading: isReleasesLoading } = useQuery(
     discogsArtistReleasesOptions(Number(id), currentPage)
   );
   const { scrobbleAlbum, scrobblingAlbums } = useScrobbleAlbum();
 
-  if (!artist || !releasesData) {
+  if (!artist) {
     return <Loading />;
   }
 
-  const { results: releases, pagination } = releasesData;
+  const releases = releasesData?.results || [];
+  const pagination = releasesData?.pagination;
 
   const artistImage = artist.images?.[0]?.uri;
 
@@ -98,7 +99,11 @@ function ArtistComponent() {
         Discography
       </h2>
 
-      {releases.length === 0 ? (
+      {isReleasesLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-gray-100" />
+        </div>
+      ) : releases.length === 0 ? (
         <p className="text-gray-600 dark:text-gray-400">
           No releases found for this artist.
         </p>
