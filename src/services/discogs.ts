@@ -5,6 +5,7 @@ import type {
   DiscogsArtistRelease,
   DiscogsSearchResponse,
   DiscogsMasterRelease,
+  DiscogsPagination,
 } from "~/types";
 
 const DISCOGS_API = "https://api.discogs.com";
@@ -137,7 +138,10 @@ export async function getArtistReleases(
   }
 
   const data = await response.json();
-  return data as { pagination: any; releases: DiscogsArtistRelease[] };
+  return data as {
+    pagination: DiscogsPagination;
+    releases: DiscogsArtistRelease[];
+  };
 }
 
 /**

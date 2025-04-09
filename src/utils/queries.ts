@@ -11,7 +11,7 @@ import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import { getUserInfo } from "~/services/lastfm";
 import { getSessionToken } from "./getToken";
 import { minutesToMilliseconds } from "date-fns";
-import type { Album, DiscogsArtistRelease } from "~/types";
+import type { Album, DiscogsArtistRelease, DiscogsPagination } from "~/types";
 
 const queryKeyStore = createQueryKeyStore({
   discogs: {
@@ -114,7 +114,10 @@ export const discogsArtistReleasesOptions = (artistId: number, page = 1) => {
     refetchOnReconnect: false,
     staleTime: Infinity,
     gcTime: minutesToMilliseconds(60),
-    select: (data: { pagination: any; releases: DiscogsArtistRelease[] }) => {
+    select: (data: {
+      pagination: DiscogsPagination;
+      releases: DiscogsArtistRelease[];
+    }) => {
       return {
         pagination: data.pagination,
         results: data.releases
