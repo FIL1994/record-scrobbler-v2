@@ -127,7 +127,6 @@ function ArtistComponent() {
               totalPages={pagination.pages}
               onPageChange={(page) => {
                 setCurrentPage(page);
-                window.scrollTo({ top: 0, behavior: "smooth" });
               }}
             />
           )}

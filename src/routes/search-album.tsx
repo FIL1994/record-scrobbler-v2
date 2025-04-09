@@ -26,7 +26,6 @@ function SearchAlbum() {
       return;
     }
     setCurrentPage(newPage);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
