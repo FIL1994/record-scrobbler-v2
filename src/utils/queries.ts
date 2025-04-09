@@ -11,14 +11,18 @@ import { createQueryKeyStore } from "@lukemorales/query-key-factory";
 import { getUserInfo } from "~/services/lastfm";
 import { getSessionToken } from "./getToken";
 import { minutesToMilliseconds } from "date-fns";
-import type { Album } from "~/types";
+import type { Album, DiscogsArtistRelease } from "~/types";
 
 const queryKeyStore = createQueryKeyStore({
   discogs: {
     collection: (username: string) => [username],
     release: (releaseId: number) => [releaseId],
     artist: (artistId: number) => [artistId],
-    artistReleases: (artistId: number) => [artistId, "releases"],
+    artistReleases: (artistId: number, page: number = 1) => [
+      artistId,
+      "releases",
+      page,
+    ],
     search: (query: string, page: number) => ["search", query, page],
     master: (masterId: number) => [masterId],
   },
@@ -98,33 +102,38 @@ export const discogsArtistOptions = (artistId: number) => {
   });
 };
 
-export const discogsArtistReleasesOptions = (artistId: number) => {
-  const key = queryKeyStore.discogs.artistReleases(artistId).queryKey;
+export const discogsArtistReleasesOptions = (artistId: number, page = 1) => {
+  const key = queryKeyStore.discogs.artistReleases(artistId, page).queryKey;
 
   return queryOptions({
     queryKey: key,
-    queryFn: () => getArtistReleases(artistId),
+    queryFn: () => getArtistReleases(artistId, page),
     retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     staleTime: Infinity,
     gcTime: minutesToMilliseconds(60),
-    select: (data) =>
-      data
-        .filter(
-          (release) => release.type === "master" || release.type === "release"
-        )
-        .map((release) => ({
-          id: release.type === "master" ? release.main_release! : release.id,
-          title: release.title,
-          year: release.year || 0,
-          coverImage: release.thumb,
-          type: release.type,
-          format: release.format,
-          artist: release.artist,
-          artistId: artistId,
-        })),
+    select: (data: { pagination: any; releases: DiscogsArtistRelease[] }) => {
+      return {
+        pagination: data.pagination,
+        results: data.releases
+          .filter(
+            (release: DiscogsArtistRelease) =>
+              release.type === "master" || release.type === "release"
+          )
+          .map((release: DiscogsArtistRelease) => ({
+            id: release.type === "master" ? release.main_release! : release.id,
+            title: release.title,
+            year: release.year || 0,
+            coverImage: release.thumb,
+            type: release.type,
+            format: release.format,
+            artist: release.artist,
+            artistId: artistId,
+          })),
+      };
+    },
   });
 };
 

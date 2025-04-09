@@ -113,11 +113,23 @@ export async function getArtistInfo(artistId: number) {
  * Get the releases (albums) by an artist
  * @see https://www.discogs.com/developers#page:database,header:database-artist-releases
  */
-export async function getArtistReleases(artistId: number) {
+export async function getArtistReleases(
+  artistId: number,
+  page = 1,
+  perPage = 12
+) {
   const token = import.meta.env.VITE_DISCOGS_TOKEN || "";
 
+  const params = new URLSearchParams({
+    token,
+    sort: "year",
+    sort_order: "desc",
+    page: page.toString(),
+    per_page: perPage.toString(),
+  });
+
   const response = await fetch(
-    `${DISCOGS_API}/artists/${artistId}/releases?token=${token}&sort=year&sort_order=desc&page=1&per_page=20`
+    `${DISCOGS_API}/artists/${artistId}/releases?${params.toString()}`
   );
 
   if (!response.ok) {
@@ -125,7 +137,7 @@ export async function getArtistReleases(artistId: number) {
   }
 
   const data = await response.json();
-  return data.releases as DiscogsArtistRelease[];
+  return data;
 }
 
 /**

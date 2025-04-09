@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
 import { ArtistLinks } from "~/components/ArtistLinks";
 import { ArtistProfile } from "~/components/ArtistProfile";
 import { PageContainer } from "~/components/PageContainer";
+import { Pagination } from "~/components/Pagination";
 import { useScrobbleAlbum } from "~/hooks/useScrobbleAlbum";
 import type { RouterContext } from "~/router";
+import type { Album } from "~/types";
 import { normalizeArtistName } from "~/utils/common";
 import {
   discogsArtistOptions,
@@ -37,13 +40,19 @@ function Loading() {
 
 function ArtistComponent() {
   const { id } = Route.useParams();
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { data: artist } = useQuery(discogsArtistOptions(Number(id)));
-  const { data: releases } = useQuery(discogsArtistReleasesOptions(Number(id)));
+  const { data: releasesData } = useQuery(
+    discogsArtistReleasesOptions(Number(id), currentPage)
+  );
   const { scrobbleAlbum, scrobblingAlbums } = useScrobbleAlbum();
 
-  if (!artist || !releases) {
+  if (!artist || !releasesData) {
     return <Loading />;
   }
+
+  const { results: releases, pagination } = releasesData;
 
   const artistImage = artist.images?.[0]?.uri;
 
@@ -94,17 +103,27 @@ function ArtistComponent() {
           No releases found for this artist.
         </p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {releases.map((album) => (
-            <AlbumCard
-              key={album.id}
-              album={album}
-              onScrobble={scrobbleAlbum}
-              isScrobbling={Boolean(scrobblingAlbums[album.id])}
-              showArtistLink={false}
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            {releases.map((album: Album) => (
+              <AlbumCard
+                key={album.id}
+                album={album}
+                onScrobble={scrobbleAlbum}
+                isScrobbling={Boolean(scrobblingAlbums[album.id])}
+                showArtistLink={false}
+              />
+            ))}
+          </div>
+
+          {pagination && pagination.pages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={pagination.pages}
+              onPageChange={(page) => setCurrentPage(page)}
             />
-          ))}
-        </div>
+          )}
+        </>
       )}
     </PageContainer>
   );
