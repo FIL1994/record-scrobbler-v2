@@ -125,7 +125,10 @@ function ArtistComponent() {
             <Pagination
               currentPage={currentPage}
               totalPages={pagination.pages}
-              onPageChange={(page) => setCurrentPage(page)}
+              onPageChange={(page) => {
+                setCurrentPage(page);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
             />
           )}
         </>
