@@ -15,7 +15,7 @@ import { ViewTransitionType } from "~/utils/viewTransitions";
 export const Route = createFileRoute("/release/$id")({
   component: ReleaseComponent,
   validateSearch: type({
-    ["from?"]: "'collection'|'search'",
+    from: ["'collection' | 'search'", "?"],
   }),
   loader: ({ context, params: { id } }) => {
     const { queryClient } = context as RouterContext;
