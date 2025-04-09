@@ -5,11 +5,12 @@ import localesPlugin from "@react-aria/optimize-locales-plugin";
 export default defineConfig({
   tsr: {
     appDirectory: "src",
+    autoCodeSplitting: true,
   },
   server: {
     preset: "netlify",
     prerender: {
-      routes: ["/"],
+      routes: ["/", "/scrobble", "/search-album"],
       crawlLinks: true,
     },
   },
