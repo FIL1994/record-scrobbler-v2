@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Search } from "lucide-react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { PageContainer } from "~/components/PageContainer";
 import { MasterAlbumCard } from "~/components/MasterAlbumCard";
+import { Pagination } from "~/components/Pagination";
 import { discogsSearchOptions } from "~/utils/queries";
 import { useDebouncedValue } from "~/hooks/useDebouncedValue";
 
@@ -82,29 +83,11 @@ function SearchAlbum() {
 
           {/* Pagination */}
           {data.pagination && data.pagination.pages > 1 && (
-            <div className="flex justify-center items-center gap-4 mt-8 mb-12">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="p-2 rounded-md border border-gray-300 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Previous page"
-              >
-                <ChevronLeft size={20} />
-              </button>
-
-              <span className="text-gray-700 dark:text-gray-300">
-                Page {currentPage} of {data.pagination.pages}
-              </span>
-
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === data.pagination.pages}
-                className="p-2 rounded-md border border-gray-300 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Next page"
-              >
-                <ChevronRight size={20} />
-              </button>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={data.pagination.pages}
+              onPageChange={handlePageChange}
+            />
           )}
         </>
       )}
