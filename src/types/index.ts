@@ -153,17 +153,19 @@ export interface DiscogsSearchResult {
   }>;
 }
 
-export interface DiscogsSearchResponse {
-  pagination: {
-    page: number;
-    pages: number;
-    per_page: number;
-    items: number;
-    urls: {
-      last?: string;
-      next?: string;
-      prev?: string;
-    };
+export interface DiscogsPagination {
+  page: number;
+  pages: number;
+  per_page: number;
+  items: number;
+  urls: {
+    last?: string;
+    next?: string;
+    prev?: string;
   };
+}
+
+export interface DiscogsSearchResponse {
+  pagination: DiscogsPagination;
   results: DiscogsSearchResult[];
 }
