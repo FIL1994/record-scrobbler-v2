@@ -40,8 +40,8 @@ const checkboxStyles = tv({
   base: "flex gap-2 items-center group text-sm transition",
   variants: {
     isDisabled: {
-      false: "text-gray-800 dark:text-zinc-200",
-      true: "text-gray-300 dark:text-zinc-600 forced-colors:text-[GrayText]",
+      false: "text-gray-800",
+      true: "text-gray-300 forced-colors:text-[GrayText]",
     },
   },
 });
@@ -52,20 +52,20 @@ const boxStyles = tv({
   variants: {
     isSelected: {
       false:
-        "bg-white dark:bg-zinc-900 border-(--color) [--color:var(--color-gray-400)] dark:[--color:colors.zinc-400)] group-pressed:[--color:var(--color-gray-500)] dark:group-pressed:[--color:var(--color-zinc-300)]",
-      true: "bg-(--color) border-(--color) [--color:var(--color-gray-700)] group-pressed:[--color:var(--color-gray-800)] dark:[--color:var(--color-slate-300)] dark:group-pressed:[--color:var(--color-slate-200)] forced-colors:[--color:Highlight]!",
+        "bg-white border-(--color) [--color:var(--color-gray-400)] group-pressed:[--color:var(--color-gray-500)]",
+      true: "bg-(--color) border-(--color) [--color:var(--color-gray-700)] group-pressed:[--color:var(--color-gray-800)] forced-colors:[--color:Highlight]!",
     },
     isInvalid: {
-      true: "[--color:var(--color-red-700)] dark:[--color:var(--color-red-600)] forced-colors:[--color:Mark]! group-pressed:[--color:var(--color-red-800)] dark:group-pressed:[--color:var(--color-red-700)]",
+      true: "[--color:var(--color-red-700)] forced-colors:[--color:Mark]! group-pressed:[--color:var(--color-red-800)]",
     },
     isDisabled: {
-      true: "[--color:var(--color-gray-200)] dark:[--color:var(--color-zinc-700)] forced-colors:[--color:GrayText]!",
+      true: "[--color:var(--color-gray-200)] forced-colors:[--color:GrayText]!",
     },
   },
 });
 
 const iconStyles =
-  "w-4 h-4 text-white group-disabled:text-gray-400 dark:text-slate-900 dark:group-disabled:text-slate-600 forced-colors:text-[HighlightText]";
+  "w-4 h-4 text-white group-disabled:text-gray-400 forced-colors:text-[HighlightText]";
 
 export function Checkbox(props: CheckboxProps) {
   return (

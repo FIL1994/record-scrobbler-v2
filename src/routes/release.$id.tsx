@@ -128,7 +128,7 @@ function ReleaseComponent() {
             <Link
               to="/artist/$id"
               params={{ id: release.artists[0].id.toString() }}
-              className="text-lg text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+              className="text-lg text-gray-600 hover:text-blue-600 transition-colors"
               viewTransition
             >
               {normalizeArtistName(release.artists[0].name)}

@@ -61,7 +61,7 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
             href={segment.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            className="text-blue-600 hover:text-blue-800"
           >
             {segment.content}
           </a>
@@ -81,10 +81,7 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
           );
         } else {
           return (
-            <span
-              key={index}
-              className="font-medium text-gray-800 dark:text-gray-200"
-            >
+            <span key={index} className="font-medium text-gray-800">
               {normalizeArtistName(segment.content)}
             </span>
           );
@@ -98,10 +95,7 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
           return <LabelLink key={index} id={segment.id!} />;
         } else {
           return (
-            <span
-              key={index}
-              className="font-medium text-gray-700 dark:text-gray-300"
-            >
+            <span key={index} className="font-medium text-gray-700">
               {segment.content}
             </span>
           );
@@ -125,7 +119,7 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
 
       case "timespan":
         return (
-          <span key={index} className="text-gray-600 dark:text-gray-400">
+          <span key={index} className="text-gray-600">
             {segment.content}
           </span>
         );
@@ -141,7 +135,7 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
   );
 
   return (
-    <div className="text-gray-600 dark:text-gray-300 prose dark:prose-invert max-w-none">
+    <div className="text-gray-600 prose max-w-none">
       <article>
         {parsedSegments.map((segment, index) => renderSegment(segment, index))}
       </article>
@@ -149,7 +143,7 @@ export function ArtistProfile({ profile }: ArtistProfileProps) {
       {(hasMoreContent || isTooLong) && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mt-2 transition-colors"
+          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 mt-2 transition-colors"
         >
           {expanded ? (
             <>
@@ -354,8 +348,7 @@ function parseProfileText(text: string): ParsedSegment[] {
   return segments;
 }
 
-const linkClasses =
-  "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300";
+const linkClasses = "text-blue-600 hover:text-blue-800";
 
 function ReleaseLink({ id, ...props }: { id: string }) {
   const state = useTooltipTriggerState({

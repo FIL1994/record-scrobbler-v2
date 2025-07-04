@@ -27,6 +27,7 @@ export interface TextFieldProps extends AriaTextFieldProps {
   label?: string;
   description?: string;
   errorMessage?: string | ((validation: ValidationResult) => string);
+  placeholder?: string;
 }
 
 export function TextField({

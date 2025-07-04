@@ -36,7 +36,7 @@ export function Header({
   return (
     <header
       className={twMerge(
-        "bg-white shadow-sm dark:bg-gray-900",
+        "bg-white shadow-sm",
         sticky && "sticky top-0 z-10",
         hasViewTransition && "[view-transition-name:header]"
       )}

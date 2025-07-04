@@ -49,7 +49,7 @@ export function ArtistTooltip({
       {...mergeProps(props, tooltipProps)}
     >
       {artist.images?.[0]?.uri && (
-        <div className="relative w-full h-32 overflow-hidden bg-gray-100 dark:bg-gray-800">
+        <div className="relative w-full h-32 overflow-hidden bg-gray-100">
           <img
             src={artist.images[0].uri}
             alt={artistName}
@@ -58,11 +58,9 @@ export function ArtistTooltip({
         </div>
       )}
       <div className="p-3">
-        <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
-          {artistName}
-        </h3>
+        <h3 className="font-medium text-gray-900 truncate">{artistName}</h3>
         {artist.profile && (
-          <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mt-1">
+          <p className="text-xs text-gray-600 line-clamp-2 mt-1">
             {artist.profile.split("\n")[0]}
           </p>
         )}

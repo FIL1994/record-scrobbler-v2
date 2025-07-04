@@ -30,9 +30,7 @@ function SearchAlbum() {
 
   return (
     <PageContainer className="max-w-7xl">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-        Search Albums
-      </h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">Search Albums</h1>
 
       <div className="mb-8">
         <div className="relative max-w-xl">
@@ -50,7 +48,7 @@ function SearchAlbum() {
               setCurrentPage(1);
             }}
             placeholder="Search for an album..."
-            className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+            className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
           />
         </div>
       </div>
@@ -62,13 +60,13 @@ function SearchAlbum() {
       )}
 
       {isError && (
-        <div className="text-red-500 dark:text-red-400 mb-6">
+        <div className="text-red-500 mb-6">
           Error searching albums. Please try again.
         </div>
       )}
 
       {data?.results && data.results.length === 0 && debouncedQuery && (
-        <div className="text-gray-500 dark:text-gray-400 py-12 text-center">
+        <div className="text-gray-500 py-12 text-center">
           No albums found matching "{debouncedQuery}"
         </div>
       )}

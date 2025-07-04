@@ -14,7 +14,7 @@ interface MasterAlbumCardProps {
 }
 
 const cardClassName =
-  "bg-white text-left rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-800 dark:bg-gray-900 transition-all duration-300 hover:shadow-lg cursor-pointer";
+  "bg-white text-left rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-200 transition-all duration-300 hover:shadow-lg cursor-pointer";
 
 export function MasterAlbumCard({ album }: MasterAlbumCardProps) {
   const [isHovering, setIsHovering] = useState(false);
@@ -69,8 +69,8 @@ export function MasterAlbumCard({ album }: MasterAlbumCardProps) {
             loading="eager"
           />
         ) : (
-          <div className="w-full h-48 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
-            <Disc className="h-20 w-20 text-gray-400 dark:text-gray-600" />
+          <div className="w-full h-48 flex items-center justify-center bg-gray-100">
+            <Disc className="h-20 w-20 text-gray-400" />
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-35 transition-opacity duration-300"></div>
@@ -78,14 +78,12 @@ export function MasterAlbumCard({ album }: MasterAlbumCardProps) {
 
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
+          <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
             {album.title}
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">{artistName}</p>
+          <p className="text-gray-600 mt-1">{artistName}</p>
           {!!album.year && (
-            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-              {album.year}
-            </p>
+            <p className="text-sm text-gray-500 mt-1">{album.year}</p>
           )}
         </div>
       </div>
