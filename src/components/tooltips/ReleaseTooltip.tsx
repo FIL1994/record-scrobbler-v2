@@ -42,7 +42,7 @@ export function ReleaseTooltip({
       {...mergeProps(props, tooltipProps)}
     >
       {release.images?.[0]?.uri && (
-        <div className="relative w-full h-32 overflow-hidden bg-gray-100 dark:bg-gray-800">
+        <div className="relative w-full h-32 overflow-hidden bg-gray-100">
           <img
             src={release.images[0].uri}
             alt={release.title}
@@ -51,18 +51,14 @@ export function ReleaseTooltip({
         </div>
       )}
       <div className="p-3">
-        <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate">
-          {release.title}
-        </h3>
+        <h3 className="font-medium text-gray-900 truncate">{release.title}</h3>
         {release.artists?.[0]?.name && (
-          <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+          <p className="text-sm text-gray-600 truncate">
             {release.artists[0].name}
           </p>
         )}
         {release.year && (
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-            {release.year}
-          </p>
+          <p className="text-xs text-gray-500 mt-1">{release.year}</p>
         )}
       </div>
     </div>

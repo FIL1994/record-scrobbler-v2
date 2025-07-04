@@ -22,7 +22,7 @@ export function Pagination({
         type="button"
         onClick={() => onPageChange(1)}
         disabled={currentPage === 1}
-        className="p-2 rounded-md border border-gray-300 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="p-2 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="First page"
       >
         <ChevronsLeft size={20} />
@@ -32,13 +32,13 @@ export function Pagination({
         type="button"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="p-2 rounded-md border border-gray-300 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="p-2 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="Previous page"
       >
         <ChevronLeft size={20} />
       </button>
 
-      <span className="text-gray-700 dark:text-gray-300 px-2">
+      <span className="text-gray-700 px-2">
         Page {currentPage} of {totalPages}
       </span>
 
@@ -46,7 +46,7 @@ export function Pagination({
         type="button"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="p-2 rounded-md border border-gray-300 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="p-2 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="Next page"
       >
         <ChevronRight size={20} />
@@ -56,7 +56,7 @@ export function Pagination({
         type="button"
         onClick={() => onPageChange(totalPages)}
         disabled={currentPage === totalPages}
-        className="p-2 rounded-md border border-gray-300 dark:border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="p-2 rounded-md border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="Last page"
       >
         <ChevronsRight size={20} />

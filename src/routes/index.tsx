@@ -5,6 +5,8 @@ import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AlbumCard } from "~/components/AlbumCard";
 import { PageContainer } from "~/components/PageContainer";
+import { Input } from "~/components/starter-kit/Field";
+import { TextField } from "~/components/starter-kit/TextField";
 import { useLocalStorage } from "~/hooks/useLocalStorage";
 import { useScrobbleAlbum } from "~/hooks/useScrobbleAlbum";
 import { getToken } from "~/utils/getToken";

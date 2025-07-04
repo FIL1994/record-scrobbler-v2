@@ -79,9 +79,7 @@ export function ArtistLinks({ urls }: ArtistLinksProps) {
 
   return (
     <div className="mt-4">
-      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-        Links
-      </h3>
+      <h3 className="text-sm font-medium text-gray-500 mb-2">Links</h3>
       <div className="flex flex-wrap gap-3">
         {parsedLinks.map((link) => (
           <a
@@ -89,7 +87,7 @@ export function ArtistLinks({ urls }: ArtistLinksProps) {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1 text-sm bg-gray-100 rounded-full text-gray-700 hover:bg-gray-200 transition-colors"
             title={link.name}
           >
             {link.icon}

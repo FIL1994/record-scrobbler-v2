@@ -24,7 +24,7 @@ export function AlbumCard({
   const artistId = album.artistId?.toString();
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-800 dark:bg-gray-900">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full border border-gray-200">
       <div className="relative">
         {album.coverImage ? (
           <img
@@ -34,8 +34,8 @@ export function AlbumCard({
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-48 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
-            <Disc className="h-20 w-20 text-gray-400 dark:text-gray-600" />
+          <div className="w-full h-48 flex items-center justify-center bg-gray-100">
+            <Disc className="h-20 w-20 text-gray-400" />
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-35 transition-opacity duration-300"></div>
@@ -43,14 +43,14 @@ export function AlbumCard({
 
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2">
+          <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
             {album.title}
           </h3>
           {showArtistLink && artistId ? (
             <Link
               to="/artist/$id"
               params={{ id: artistId }}
-              className="text-gray-600 dark:text-gray-400 mt-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="text-gray-600 mt-1 hover:text-blue-600 transition-colors"
               viewTransition={{
                 types: [ViewTransitionType.SlideUp],
               }}
@@ -58,18 +58,14 @@ export function AlbumCard({
               {artistName}
             </Link>
           ) : (
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
-              {artistName}
-            </p>
+            <p className="text-gray-600 mt-1">{artistName}</p>
           )}
           {!!album.year && (
-            <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-              {album.year}
-            </p>
+            <p className="text-sm text-gray-500 mt-1">{album.year}</p>
           )}
         </div>
 
-        <div className="mt-4 flex gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
+        <div className="mt-4 flex gap-2 pt-3 border-t border-gray-100">
           <Button
             variant="destructive"
             onPress={() => onScrobble(album)}
@@ -93,7 +89,7 @@ export function AlbumCard({
             to="/release/$id"
             params={{ id: album.id.toString() }}
             search={{ from }}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 min-h-[40px]"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors min-h-[40px]"
             viewTransition={{
               types: [ViewTransitionType.SlideUp],
             }}

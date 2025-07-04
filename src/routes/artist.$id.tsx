@@ -61,7 +61,7 @@ function ArtistComponent() {
     <PageContainer className="max-w-7xl">
       <Link
         to="/"
-        className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 dark:text-gray-400 dark:hover:text-gray-200"
+        className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
         viewTransition={{
           types: [ViewTransitionType.Flip],
         }}
@@ -70,7 +70,7 @@ function ArtistComponent() {
         Back to Collection
       </Link>
 
-      <div className="bg-white rounded-lg shadow-md overflow-hidden dark:bg-gray-900 dark:border dark:border-gray-800 mb-10">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden mb-10">
         <div className="p-6 md:p-8 flex flex-col md:flex-row gap-6">
           {artistImage && (
             <img
@@ -80,7 +80,7 @@ function ArtistComponent() {
             />
           )}
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            <h1 className="text-3xl font-bold text-gray-900">
               {normalizeArtistName(artist.name)}
             </h1>
 
@@ -95,18 +95,14 @@ function ArtistComponent() {
         </div>
       </div>
 
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-        Discography
-      </h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">Discography</h2>
 
       {isReleasesLoading ? (
         <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 dark:border-gray-100" />
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900" />
         </div>
       ) : releases.length === 0 ? (
-        <p className="text-gray-600 dark:text-gray-400">
-          No releases found for this artist.
-        </p>
+        <p className="text-gray-600">No releases found for this artist.</p>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
